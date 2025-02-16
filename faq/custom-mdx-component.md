@@ -31,7 +31,7 @@ export const components: MDXComponents = {
   a: CustomLink,
   pre: Pre,
 +  DonutChart,
-  BlogNewsletterForm,
+  NewsNewsletterForm,
 }
 ```
 
