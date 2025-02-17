@@ -8,11 +8,11 @@ module.exports = {
         DEFAULT: {
           css: {
             a: {
-              color: theme('--color-primary-500'),
+              color: theme('--color-gray-500'),
               '&:hover': {
-                color: theme('--color-primary-600'),
+                color: theme('--color-gray-600'),
               },
-              code: { color: theme('--color-primary-400') },
+              code: { color: theme('--color-gray-400') },
             },
             'h1,h2': {
               fontWeight: '700',
@@ -29,7 +29,7 @@ module.exports = {
         invert: {
           css: {
             a: {
-              color: theme('--color-pink-500'),
+              color: theme('--color-primary-500'),
               '&:hover': {
                 color: theme('--color-primary-400'),
               },
