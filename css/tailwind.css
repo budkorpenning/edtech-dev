@@ -169,3 +169,25 @@ input:-webkit-autofill:focus {
   display: inline-block;
   vertical-align: middle;
 }
+
+/* Light mode */
+input.h-8.w-full {
+  outline: none !important;
+  border: 2px solid #575555 !important; /* Light mode primary color */
+}
+
+input.h-8.w-full:focus {
+  border: 2px solid #575555 !important;
+  box-shadow: none !important;
+}
+
+/* Dark mode - Uses .dark class instead of @media */
+.dark input.h-8.w-full {
+  border: 2px solid #05621d !important; /* Dark mode primary color */
+}
+
+.dark input.h-8.w-full:focus {
+  border: 2px solid #05621d !important;
+}
+
+
