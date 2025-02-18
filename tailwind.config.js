@@ -4,6 +4,12 @@
 module.exports = {
   theme: {
     extend: {
+      fontFamily: {
+        'sans': ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        'logo': ['Blinker', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        'mono': ['JetBrains Mono', 'monospace'],
+        'outfit': ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
       typography: ({ theme }) => ({
         DEFAULT: {
           css: {
@@ -17,9 +23,11 @@ module.exports = {
             'h1,h2': {
               fontWeight: '700',
               letterSpacing: theme('--tracking-tight'),
+              fontFamily: 'Outfit, ui-sans-serif, system-ui, sans-serif',
             },
             h3: {
               fontWeight: '600',
+              fontFamily: 'Outfit, ui-sans-serif, system-ui, sans-serif',
             },
             code: {
               color: theme('--color-indigo-500'),
@@ -37,6 +45,7 @@ module.exports = {
             },
             'h1,h2,h3,h4,h5,h6': {
               color: theme('--color-gray-100'),
+              fontFamily: 'Outfit, ui-sans-serif, system-ui, sans-serif',
             },
           },
         },
