@@ -1,9 +1,9 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Next.js Starter News',
-  author: 'Jörgen Selander',
+  title: 'Free & Open AI Solutions',
+  author: 'EdtechAgent.AI',
   headerTitle: 'EdtechAgent.AI',
-  description: 'The Future of Education',
+  description: 'Free & Open AI Solutions',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-news.vercel.app',
