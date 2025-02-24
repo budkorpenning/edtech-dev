@@ -6,8 +6,8 @@ const siteMetadata = {
   description: 'Free & Open AI Solutions',
   language: 'en-us',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://tailwind-nextjs-starter-news.vercel.app',
-  siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-news',
+  siteUrl: 'https://tailwind-nextjs-starter-guides.vercel.app',
+  siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-guides',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
   mastodon: 'https://mastodon.social/@mastodonuser',
@@ -37,7 +37,7 @@ const siteMetadata = {
       // Remember to add 'us.umami.is' in `next.config.js` as a permitted domain for the CSP
     },
     // plausibleAnalytics: {
-    //   plausibleDataDomain: '', // e.g. tailwind-nextjs-starter-news.vercel.app
+    //   plausibleDataDomain: '', // e.g. tailwind-nextjs-starter-guides.vercel.app
     // If you are hosting your own Plausible.
     //   src: '', // e.g. https://plausible.my-domain.com/js/script.js
     // },
