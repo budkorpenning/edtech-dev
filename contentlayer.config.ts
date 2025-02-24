@@ -60,11 +60,11 @@ const computedFields: ComputedFields = {
 }
 
 /**
- * Count the occurrences of all tags across news posts and write to json file
+ * Count the occurrences of all tags across guides posts and write to json file
  */
-async function createTagCount(allNews) {
+async function createTagCount(allGuides) {
   const tagCount: Record<string, number> = {}
-  allNews.forEach((file) => {
+  allGuides.forEach((file) => {
     if (file.tags && (!isProduction || file.draft !== true)) {
       file.tags.forEach((tag) => {
         const formattedTag = slug(tag)
@@ -80,22 +80,22 @@ async function createTagCount(allNews) {
   writeFileSync('./app/tag-data.json', formatted)
 }
 
-function createSearchIndex(allNews) {
+function createSearchIndex(allGuides) {
   if (
     siteMetadata?.search?.provider === 'kbar' &&
     siteMetadata.search.kbarConfig.searchDocumentsPath
   ) {
     writeFileSync(
       `public/${path.basename(siteMetadata.search.kbarConfig.searchDocumentsPath)}`,
-      JSON.stringify(allCoreContent(sortPosts(allNews)))
+      JSON.stringify(allCoreContent(sortPosts(allGuides)))
     )
     console.log('Local search index generated...')
   }
 }
 
-export const News = defineDocumentType(() => ({
-  name: 'News',
-  filePathPattern: 'news/**/*.mdx',
+export const Guide = defineDocumentType(() => ({
+  name: 'Guide',
+  filePathPattern: 'guides/**/*.mdx',
   contentType: 'mdx',
   fields: {
     title: { type: 'string', required: true },
@@ -116,7 +116,7 @@ export const News = defineDocumentType(() => ({
       type: 'json',
       resolve: (doc) => ({
         '@context': 'https://schema.org',
-        '@type': 'NewsPosting',
+        '@type': 'GuidesPosting',
         headline: doc.title,
         datePublished: doc.date,
         dateModified: doc.lastmod || doc.date,
@@ -149,7 +149,7 @@ export const Authors = defineDocumentType(() => ({
 
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [News, Authors],
+  documentTypes: [Guide, Authors],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [
@@ -180,8 +180,8 @@ export default makeSource({
     ],
   },
   onSuccess: async (importData) => {
-    const { allNews } = await importData()
-    createTagCount(allNews)
-    createSearchIndex(allNews)
+    const { allGuides } = await importData()
+    createTagCount(allGuides)
+    createSearchIndex(allGuides)
   },
 })

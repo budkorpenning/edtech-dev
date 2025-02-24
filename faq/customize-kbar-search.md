@@ -12,7 +12,7 @@ Add a `SearchProvider` component such as the one shown below and use it in place
 import { KBarSearchProvider } from 'pliny/search/KBar'
 import { useRouter } from 'next/navigation'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import { News } from 'contentlayer/generated'
+import { Guides } from 'contentlayer/generated'
 
 export const SearchProvider = ({ children }) => {
   const router = useRouter()
@@ -39,11 +39,11 @@ export const SearchProvider = ({ children }) => {
           },
         ],
         onSearchDocumentsLoad(json) {
-          return json.map((post: CoreContent<News>) => ({
+          return json.map((post: CoreContent<Guides>) => ({
             id: post.path,
             name: post.title,
             keywords: post?.summary || '',
-            section: 'News',
+            section: 'Guides',
             subtitle: post.tags.join(', '),
             perform: () => router.push('/' + post.path),
           }))
@@ -56,34 +56,34 @@ export const SearchProvider = ({ children }) => {
 }
 ```
 
-You can even choose to do a full text search over the entire generated news content though this would come at the expense of a larger search index file by modifying the `createSearchIndex` function in `contentlayer.config.ts` to:
+You can even choose to do a full text search over the entire generated guides content though this would come at the expense of a larger search index file by modifying the `createSearchIndex` function in `contentlayer.config.ts` to:
 
 ```tsx
-function createSearchIndex(allNews) {
+function createSearchIndex(allGuides) {
   if (
     siteMetadata?.search?.provider === 'kbar' &&
     siteMetadata.search.kbarConfig.searchDocumentsPath
   ) {
     writeFileSync(
       `public/${siteMetadata.search.kbarConfig.searchDocumentsPath}`,
-      JSON.stringify(sortPosts(allNews))
+      JSON.stringify(sortPosts(allGuides))
     )
     console.log('Local search index generated...')
   }
 }
 ```
 
-Note the change from `JSON.stringify(allCoreContent(sortPosts(allNews)))` to `JSON.stringify((sortPosts(allNews)))`.
+Note the change from `JSON.stringify(allCoreContent(sortPosts(allGuides)))` to `JSON.stringify((sortPosts(allGuides)))`.
 
 Next, in the modified `SearchProvider`, dump the raw content to the `keywords` field in the `onSearchDocumentsLoad` prop:
 
 ```tsx
 onSearchDocumentsLoad(json) {
-  return json.map((post: News) => ({
+  return json.map((post: Guides) => ({
     id: post.path,
     name: post.title,
     keywords: post.body.raw,
-    section: 'News',
+    section: 'Guides',
     subtitle: post.tags.join(', '),
     perform: () => router.push('/' + post.path),
   }))

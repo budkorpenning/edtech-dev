@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
-import type { News } from 'contentlayer/generated'
+import type { Guide } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
@@ -14,9 +14,9 @@ interface PaginationProps {
   currentPage: number
 }
 interface ListLayoutProps {
-  posts: CoreContent<News>[]
+  posts: CoreContent<Guide>[]
   title: string
-  initialDisplayPosts?: CoreContent<News>[]
+  initialDisplayPosts?: CoreContent<Guide>[]
   pagination?: PaginationProps
 }
 
@@ -71,20 +71,20 @@ export default function ListLayout({
   pagination,
 }: ListLayoutProps) {
   const [searchValue, setSearchValue] = useState('')
-  const filteredNewsPosts = posts.filter((post) => {
+  const filteredGuidesPosts = posts.filter((post) => {
     const searchContent = post.title + post.summary + post.tags?.join(' ')
     return searchContent.toLowerCase().includes(searchValue.toLowerCase())
   })
 
   // If initialDisplayPosts exist, display it if no searchValue is specified
   const displayPosts =
-    initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredNewsPosts
+    initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredGuidesPosts
 
   return (
     <>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14 dark:text-gray-100">
+          <h1 className="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-3xl sm:leading-10 md:text-3xl md:leading-14 dark:text-gray-100">
             {title}
           </h1>
           <div className="relative max-w-lg">
@@ -115,7 +115,7 @@ export default function ListLayout({
           </div>
         </div>
         <ul>
-          {!filteredNewsPosts.length && 'No posts found.'}
+          {!filteredGuidesPosts.length && 'No posts found.'}
           {displayPosts.map((post) => {
             const { path, date, title, summary, tags } = post
             return (

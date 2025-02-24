@@ -1,14 +1,14 @@
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import { allNews } from 'contentlayer/generated'
+import { allGuides } from 'contentlayer/generated'
 import { genPageMetadata } from 'app/seo'
 import ListLayout from '@/layouts/ListLayoutWithTags'
 
 const POSTS_PER_PAGE = 5
 
-export const metadata = genPageMetadata({ title: 'News' })
+export const metadata = genPageMetadata({ title: 'Guides' })
 
-export default async function NewsPage(props: { searchParams: Promise<{ page: string }> }) {
-  const posts = allCoreContent(sortPosts(allNews))
+export default async function GuidesPage(props: { searchParams: Promise<{ page: string }> }) {
+  const posts = allCoreContent(sortPosts(allGuides))
   const pageNumber = 1
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
   const initialDisplayPosts = posts.slice(0, POSTS_PER_PAGE * pageNumber)
@@ -22,7 +22,7 @@ export default async function NewsPage(props: { searchParams: Promise<{ page: st
       posts={posts}
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}
-      title="All Posts"
+      title="All Guides"
     />
   )
 }
