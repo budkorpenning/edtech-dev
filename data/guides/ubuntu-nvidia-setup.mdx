@@ -1,0 +1,308 @@
+---
+title: How to Set Up NVIDIA Graphics Card in Ubuntu
+date: '2025-02-21'
+tags: ['ubuntu', 'nvidia', 'setup']
+draft: false
+summary: A guide to setting up NVIDIA graphics card in Ubuntu
+---
+
+# How to Set Up NVIDIA Graphics Card in Ubuntu
+
+This guide will walk you through the process of properly installing and configuring NVIDIA graphics drivers on Ubuntu to get optimal performance from your GPU.
+
+## Prerequisites
+
+- Ubuntu operating system (this guide focuses on Ubuntu 22.04 LTS or newer)
+- NVIDIA graphics card (like your RTX 4070)
+- Internet connection
+- Basic familiarity with terminal commands
+
+## Step 1: Check Your NVIDIA GPU Model
+
+First, let's confirm your NVIDIA GPU model:
+
+```bash
+lspci | grep -E "VGA|3D|Display"
+```
+
+This will display your graphics hardware information. Look for the line containing "NVIDIA" to identify your GPU model.
+
+## Step 2: Update Your System
+
+Before installing drivers, update your system:
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+## Step 3: Identify Available Drivers
+
+Ubuntu can recommend appropriate drivers for your NVIDIA GPU.
+
+### Method 1: Using the Command Line
+
+```bash
+ubuntu-drivers devices
+```
+
+This command will display compatible drivers for your hardware. You should see output similar to:
+
+```
+== /sys/devices/pci0000:00/0000:00:01.1/0000:01:00.0 ==
+modalias : pci:v000010DEd00002860sv000017AAsd00003E3Cbc03sc00i00
+vendor   : NVIDIA Corporation
+model    : AD106M [GeForce RTX 4070 Max-Q / Mobile]
+driver   : nvidia-driver-535 - distro non-free
+driver   : nvidia-driver-550 - distro non-free recommended
+driver   : nvidia-driver-535-server-open - distro non-free
+driver   : nvidia-driver-535-server - distro non-free
+driver   : nvidia-driver-550-open - distro non-free
+driver   : nvidia-driver-535-open - distro non-free
+driver   : xserver-xorg-video-nouveau - distro free builtin
+```
+
+Look for the driver marked as "recommended" (in this case, `nvidia-driver-550`).
+
+### Method 2: Using the GUI
+
+1. Open the "Software & Updates" application
+2. Go to the "Additional Drivers" tab
+3. Wait for the system to scan for available drivers
+4. You'll see a list of available NVIDIA drivers
+5. Select the recommended proprietary driver
+
+## Step 4: Install the NVIDIA Driver
+
+### Method 1: Using the Command Line
+
+For automatic installation of the recommended driver:
+
+```bash
+sudo apt update
+sudo apt install nvidia-driver-550
+```
+
+Replace "550" with the version recommended for your GPU if different.
+
+Alternatively, install all recommended drivers in one command:
+
+```bash
+sudo ubuntu-drivers install
+```
+
+### Method 2: Using the GUI
+
+1. In the "Additional Drivers" tab, select the recommended NVIDIA driver
+2. Click "Apply Changes"
+3. Enter your password when prompted
+4. Wait for the installation to complete
+
+## Step 5: Restart Your System
+
+```bash
+sudo reboot
+```
+
+## Step 6: Verify Driver Installation
+
+After rebooting, verify that the NVIDIA driver is properly installed:
+
+```bash
+nvidia-smi
+```
+
+You should see output similar to:
+
+```
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.144.03             Driver Version: 550.144.03     CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 4070 ...    Off |   00000000:01:00.0  On |                  N/A |
+| N/A   37C    P8              1W /   55W |     374MiB /   8188MiB |      1%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+```
+
+This confirms that your NVIDIA driver is correctly installed and functioning.
+
+## Step 7: Install NVIDIA CUDA (Optional)
+
+If you plan to use your GPU for AI/ML workloads, deep learning, or other CUDA-enabled applications, install the CUDA toolkit:
+
+```bash
+sudo apt install nvidia-cuda-toolkit
+```
+
+Verify CUDA installation:
+
+```bash
+nvcc --version
+```
+
+## Step 8: Install Vulkan Support (Optional, for Gaming)
+
+If you plan to use your GPU for gaming, install Vulkan support:
+
+```bash
+sudo apt install libvulkan1 vulkan-utils
+```
+
+## Step 9: Configure Prime (for Laptops with Hybrid Graphics)
+
+If you're using a laptop with both Intel/AMD integrated graphics and an NVIDIA GPU:
+
+### Install NVIDIA Prime
+
+```bash
+sudo apt install nvidia-prime
+```
+
+### Switch Between GPUs
+
+- Use integrated graphics (better battery life):
+  ```bash
+  sudo prime-select intel  # For Intel integrated graphics
+  # OR
+  sudo prime-select amd    # For AMD integrated graphics
+  ```
+
+- Use NVIDIA graphics (better performance):
+  ```bash
+  sudo prime-select nvidia
+  ```
+
+- Check current configuration:
+  ```bash
+  prime-select query
+  ```
+
+After switching, you need to log out and log back in for changes to take effect.
+
+## Step 10: Install NVIDIA Settings Utility
+
+The NVIDIA Settings utility allows you to configure various aspects of your GPU:
+
+```bash
+sudo apt install nvidia-settings
+```
+
+Launch it with:
+
+```bash
+nvidia-settings
+```
+
+From here, you can configure:
+- Display resolution and refresh rate
+- Multiple monitor setup
+- PowerMizer settings (power management)
+- Thermal settings and fan control (on supported GPUs)
+- Anti-aliasing and anisotropic filtering
+- And more
+
+## Step 11: Enable Performance Mode (Optional)
+
+For maximum GPU performance:
+
+1. Open NVIDIA Settings:
+   ```bash
+   nvidia-settings
+   ```
+
+2. Go to "PowerMizer" or "PRIME Profiles" (depending on your system)
+3. Set the performance mode to "Prefer Maximum Performance"
+4. Click "Apply"
+
+## Troubleshooting
+
+### If NVIDIA Driver Doesn't Load
+
+1. Check if Secure Boot is enabled in BIOS - it may need to be disabled
+2. Check if NVIDIA modules are loaded:
+   ```bash
+   lsmod | grep nvidia
+   ```
+   If nothing is returned, the modules aren't loaded.
+
+3. Try reinstalling the driver:
+   ```bash
+   sudo apt purge *nvidia*
+   sudo apt install nvidia-driver-550  # Use your recommended version
+   ```
+
+### Black Screen After Installing Drivers
+
+1. Boot into recovery mode from GRUB menu
+2. Select "root" or "drop to root shell"
+3. Mount the file system in read-write mode:
+   ```bash
+   mount -o remount,rw /
+   ```
+4. Remove NVIDIA drivers:
+   ```bash
+   apt purge *nvidia*
+   ```
+5. Reboot:
+   ```bash
+   reboot
+   ```
+
+### Low Performance or High Power Consumption
+
+1. Check if your GPU is running at maximum performance:
+   ```bash
+   nvidia-smi -q -d PERFORMANCE
+   ```
+2. Use NVIDIA Settings to adjust power management settings
+
+### Checking for GPU Errors
+
+```bash
+dmesg | grep -i nvidia
+```
+
+Look for any error messages related to NVIDIA.
+
+## Updating NVIDIA Drivers
+
+When a new driver version becomes available:
+
+1. Remove old driver (optional, but recommended to avoid conflicts):
+   ```bash
+   sudo apt purge *nvidia*
+   ```
+
+2. Install the new driver:
+   ```bash
+   sudo apt update
+   sudo apt install nvidia-driver-XXX  # Replace XXX with the new version
+   ```
+
+3. Reboot:
+   ```bash
+   sudo reboot
+   ```
+
+## Installing PyTorch with CUDA Support
+
+For AI/ML development, install PyTorch with CUDA support:
+
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
+
+This installs PyTorch with CUDA 11.8 support, which is compatible with newer NVIDIA drivers.
+
+## Best Practices
+
+1. **Keep Your Drivers Updated**: Check for driver updates regularly
+2. **Monitor GPU Temperature**: Use `nvidia-smi` or `nvidia-settings` to monitor GPU temperature
+3. **Clean Installation**: If upgrading from a previous driver version, consider removing the old drivers completely before installing new ones
+4. **Hybrid Graphics**: On laptops, use NVIDIA graphics only when needed to save battery life
+
+By following this guide, you should have a properly configured NVIDIA GPU ready for gaming, AI/ML development, or any other GPU-intensive tasks on your Ubuntu system.

@@ -1,0 +1,439 @@
+---
+title: How to Set Up Development Environments in Ubuntu
+date: '2025-02-23'
+tags: ['ubuntu', 'development', 'guide']
+draft: false
+summary: A guide to setting up development environments in Ubuntu
+---
+
+# How to Set Up Development Environments in Ubuntu
+
+This guide will help you set up a comprehensive development environment on Ubuntu, with a focus on web development, Python programming, and AI/ML workflows.
+
+## Basic Development Tools
+
+### Essential Build Tools and Libraries
+
+First, install the basic development packages:
+
+```bash
+sudo apt update
+sudo apt install build-essential git curl wget unzip
+```
+
+### Setting Up Version Control with Git
+
+```bash
+sudo apt install git
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
+
+Generate an SSH key for GitHub/GitLab:
+
+```bash
+ssh-keygen -t ed25519 -C "your.email@example.com"
+cat ~/.ssh/id_ed25519.pub
+```
+
+Copy the output and add it to your GitHub/GitLab account.
+
+## Python Development Environment
+
+### Installing Python and Core Tools
+
+Ubuntu comes with Python pre-installed, but make sure you have the latest version and essential tools:
+
+```bash
+sudo apt install python3 python3-pip python3-venv
+```
+
+### Setting Up Virtual Environments
+
+Create a dedicated directory for your Python projects:
+
+```bash
+mkdir -p ~/Projects/Python
+cd ~/Projects/Python
+```
+
+Create a virtual environment for a new project:
+
+```bash
+python3 -m venv myproject-env
+source myproject-env/bin/activate
+```
+
+Install packages in the virtual environment:
+
+```bash
+pip install numpy pandas matplotlib jupyter
+```
+
+### Installing Anaconda/Miniconda (Optional)
+
+For data science and AI/ML workflows, Anaconda provides a comprehensive environment:
+
+1. Download Miniconda:
+   ```bash
+   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+   ```
+
+2. Install:
+   ```bash
+   bash Miniconda3-latest-Linux-x86_64.sh
+   ```
+
+3. Create and activate a conda environment:
+   ```bash
+   conda create -n myenv python=3.10
+   conda activate myenv
+   ```
+
+4. Install packages:
+   ```bash
+   conda install numpy pandas scikit-learn matplotlib jupyter
+   ```
+
+### Installing PyCharm (IDE for Python)
+
+```bash
+sudo snap install pycharm-community --classic
+```
+
+For the Professional edition:
+
+```bash
+sudo snap install pycharm-professional --classic
+```
+
+## Web Development Setup
+
+### Node.js and npm
+
+Install Node.js using nvm (Node Version Manager) for better flexibility:
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+```
+
+Close and reopen your terminal, then:
+
+```bash
+nvm install --lts
+nvm use --lts
+```
+
+Verify the installation:
+
+```bash
+node --version
+npm --version
+```
+
+### Installing Web Development Tools
+
+```bash
+npm install -g @angular/cli # Angular
+npm install -g create-react-app # React
+npm install -g @vue/cli # Vue
+```
+
+### Setting Up VS Code for Web Development
+
+Install Visual Studio Code:
+
+```bash
+sudo snap install code --classic
+```
+
+Launch VS Code and install essential extensions:
+- ESLint
+- Prettier
+- Live Server
+- JavaScript (ES6) code snippets
+- HTML CSS Support
+- Auto Rename Tag
+
+## Database Setup
+
+### Installing PostgreSQL
+
+```bash
+sudo apt install postgresql postgresql-contrib
+```
+
+Start the service:
+
+```bash
+sudo systemctl enable postgresql
+sudo systemctl start postgresql
+```
+
+Set up a user:
+
+```bash
+sudo -u postgres createuser --interactive
+```
+
+### Installing MongoDB
+
+```bash
+wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+sudo apt update
+sudo apt install mongodb-org
+```
+
+Start the service:
+
+```bash
+sudo systemctl enable mongod
+sudo systemctl start mongod
+```
+
+### Installing MySQL/MariaDB
+
+```bash
+sudo apt install mariadb-server
+```
+
+Secure the installation:
+
+```bash
+sudo mysql_secure_installation
+```
+
+## Docker and Containerization
+
+### Installing Docker
+
+```bash
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io
+```
+
+Add your user to the docker group to run Docker without sudo:
+
+```bash
+sudo usermod -aG docker $USER
+```
+
+Log out and log back in for the changes to take effect.
+
+### Installing Docker Compose
+
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+Verify the installation:
+
+```bash
+docker --version
+docker-compose --version
+```
+
+## AI and Machine Learning Setup
+
+### Installing TensorFlow with GPU Support
+
+Prerequisites (after setting up NVIDIA drivers):
+
+```bash
+sudo apt install nvidia-cuda-toolkit
+```
+
+Install TensorFlow:
+
+```bash
+pip install tensorflow
+```
+
+Verify GPU support:
+
+```python
+import tensorflow as tf
+print("GPU Available: ", tf.config.list_physical_devices('GPU'))
+```
+
+### Installing PyTorch with GPU Support
+
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
+
+Verify GPU support:
+
+```python
+import torch
+print("CUDA Available: ", torch.cuda.is_available())
+```
+
+### Setting Up Ollama for Local LLMs
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+Download and run models:
+
+```bash
+ollama pull llama2
+ollama run llama2
+```
+
+### Installing CrewAI
+
+```bash
+pip install crewai
+```
+
+### Setting Up Streamlit
+
+```bash
+pip install streamlit
+```
+
+Create a simple Streamlit app:
+
+```python
+# app.py
+import streamlit as st
+
+st.title("Hello Streamlit")
+st.write("This is a simple Streamlit app")
+```
+
+Run it:
+
+```bash
+streamlit run app.py
+```
+
+## Setting Up Integrated Development Environments (IDEs)
+
+### Visual Studio Code
+
+Already covered in the Web Development section. Configure Python extension:
+
+1. Install the Python extension
+2. Set up linting (Pylint or Flake8)
+3. Configure formatter (Black or autopep8)
+
+### JetBrains Toolbox (for multiple JetBrains IDEs)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nagygergo/jetbrains-toolbox-install/master/jetbrains-toolbox.sh | bash
+```
+
+Launch JetBrains Toolbox and install:
+- PyCharm for Python
+- IntelliJ IDEA for Java
+- WebStorm for JavaScript
+- DataGrip for Databases
+
+## Setting Up Version Control GUIs
+
+### GitKraken
+
+```bash
+wget https://release.gitkraken.com/linux/gitkraken-amd64.deb
+sudo dpkg -i gitkraken-amd64.deb
+sudo apt install -f
+```
+
+### GitHub Desktop for Linux (Unofficial)
+
+```bash
+wget -qO - https://packagecloud.io/shiftkey/desktop/gpgkey | sudo apt-key add -
+sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/shiftkey/desktop/any/ any main" > /etc/apt/sources.list.d/packagecloud-shiftkey-desktop.list'
+sudo apt update
+sudo apt install github-desktop
+```
+
+## Terminal Enhancements for Development
+
+### Installing and Configuring Zsh
+
+```bash
+sudo apt install zsh
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+Install useful plugins in `~/.zshrc`:
+
+```
+plugins=(git docker docker-compose npm python pip vscode)
+```
+
+### Installing Terminator for Split Terminal Windows
+
+```bash
+sudo apt install terminator
+```
+
+## Productivity Tools for Developers
+
+### Installing Postman for API Testing
+
+```bash
+sudo snap install postman
+```
+
+### Installing DBeaver for Database Management
+
+```bash
+sudo snap install dbeaver-ce
+```
+
+## Setting Up a Local Web Server
+
+### LAMP Stack (Linux, Apache, MySQL, PHP)
+
+```bash
+sudo apt install apache2 mysql-server php libapache2-mod-php php-mysql
+```
+
+### NGINX Server
+
+```bash
+sudo apt install nginx
+```
+
+## Best Practices for Development in Ubuntu
+
+1. **Keep Your System Updated**:
+   ```bash
+   sudo apt update && sudo apt upgrade
+   ```
+
+2. **Use Version Control for All Projects**:
+   ```bash
+   git init
+   git remote add origin [repository-url]
+   ```
+
+3. **Backup Your Development Environment**:
+   - Use backup tools as described in the backup guide
+   - Back up configuration files and databases regularly
+
+4. **Use Virtual Environments**:
+   - For Python: venv or conda
+   - For Node.js: nvm
+   - For different projects: Docker containers
+
+5. **Monitor System Resources**:
+   ```bash
+   sudo apt install htop
+   ```
+
+6. **Automate Routine Tasks**:
+   - Create shell scripts for repetitive tasks
+   - Use Makefiles for project-specific commands
+
+By following this guide, you'll have a fully-featured development environment in Ubuntu, capable of handling web development, Python programming, and AI/ML workflows with optimal performance.

@@ -1,0 +1,278 @@
+---
+title: How to Set Up Backup Routines on Ubuntu
+date: '2025-02-19'
+tags: ['ubuntu', 'backup', 'guide']
+draft: false
+summary: A guide to setting up backup routines on Ubuntu
+---
+
+# How to Set Up Backup Routines on Ubuntu
+
+Regular backups are essential for protecting your data against hardware failures, accidental deletions, and other disasters. This guide outlines multiple ways to set up reliable backup routines on Ubuntu.
+
+## 1. Using External Drives for Manual Backups
+
+### Manually Mount and Configure an External Drive
+
+#### Step 1: Identify Your Drive
+
+1. Connect your external drive
+2. Open Terminal (Ctrl+Alt+T)
+3. Run the following command:
+   ```bash
+   lsblk -f
+   ```
+4. Identify your external drive (e.g., sda1, sdb1) by looking at the size and name
+
+#### Step 2: Create a Mount Point
+
+```bash
+sudo mkdir -p /mnt/backup
+```
+
+#### Step 3: Mount the Drive
+
+```bash
+sudo mount /dev/sda1 /mnt/backup
+```
+Replace `sda1` with your actual drive identifier.
+
+#### Step 4: Verify the Mount
+
+```bash
+df -h
+```
+Look for `/mnt/backup` in the output.
+
+### Set Up Automatic Mounting
+
+To ensure your drive mounts automatically every time you connect it:
+
+#### Step 1: Get the Drive UUID
+
+```bash
+sudo blkid
+```
+Copy the UUID of your drive (e.g., UUID="f124a11a-feab-49e7-8e4f-69883ed95016")
+
+#### Step 2: Edit /etc/fstab
+
+```bash
+sudo nano /etc/fstab
+```
+
+Add this line to the end of the file (replace with your UUID):
+```
+UUID=f124a11a-feab-49e7-8e4f-69883ed95016 /mnt/backup ext4 defaults,nofail,x-systemd.automount 0 2
+```
+
+#### Step 3: Apply Changes
+
+```bash
+sudo mount -a
+```
+
+#### Step 4: Test Auto-Mount
+
+Reboot your system and check if the drive mounts automatically:
+```bash
+sudo reboot
+```
+
+After logging back in, verify with:
+```bash
+df -h
+```
+
+### Perform a Full System Backup with Rsync
+
+#### Step 1: Run the Backup Command
+
+```bash
+sudo rsync -aAXv --delete --exclude={"/mnt/backup","/dev","/proc","/sys","/tmp","/run","/mnt","/media","/lost+found","swap.img","/var/log","/var/tmp","/var/cache"} / /mnt/backup/full-system-backup/
+```
+
+The command explained:
+- `-aAX`: Preserves permissions, links, and other attributes
+- `--delete`: Removes files in the destination that no longer exist in the source
+- `--exclude`: Skips unnecessary system directories
+
+#### Step 2: Schedule Regular Backups
+
+Create a weekly backup job with cron:
+
+```bash
+crontab -e
+```
+
+Add this line to run backups every Sunday at 2 AM:
+```
+0 2 * * 0 sudo rsync -aAXv --delete --exclude={"/mnt/backup","/dev","/proc","/sys","/tmp","/run","/mnt","/media","/lost+found","swap.img","/var/log","/var/tmp","/var/cache"} / /mnt/backup/full-system-backup/
+```
+
+#### Step 3: Unmount When Finished
+
+Always safely unmount your drive before disconnecting:
+
+```bash
+sudo umount /mnt/backup
+```
+
+## 2. Using Deja Dup (GUI Backup Tool)
+
+Deja Dup provides a user-friendly way to set up automated backups.
+
+### Step 1: Install Deja Dup
+
+```bash
+sudo apt update
+sudo apt install deja-dup
+```
+
+### Step 2: Configure Backups
+
+1. Open Deja Dup (search for "Backups" in the application menu)
+2. Configure the following:
+   - **Storage location**: Select your external drive or a cloud service
+   - **Folders to save**: Choose which folders to include in your backup
+   - **Folders to ignore**: Select folders to exclude
+   - **Schedule**: Set up automatic backup frequency
+
+### Step 3: Start Your First Backup
+
+1. Click "Back Up Now" to start your first backup
+2. Enter your password if prompted
+3. Wait for the backup to complete
+
+## 3. Using Timeshift for System Snapshots
+
+Timeshift is designed specifically for system files and is ideal for rolling back system changes.
+
+### Step 1: Install Timeshift
+
+```bash
+sudo apt update
+sudo apt install timeshift
+```
+
+### Step 2: Configure Timeshift
+
+1. Launch Timeshift with root privileges:
+   ```bash
+   sudo timeshift-gtk
+   ```
+2. Select your snapshot type:
+   - **RSYNC**: Works with any file system
+   - **BTRFS**: Better performance if you're using the BTRFS file system
+3. Choose your backup location
+4. Configure schedule settings
+5. Select which users' data to include
+
+### Step 3: Create Your First Snapshot
+
+Click "Create" to make your first system snapshot.
+
+## 4. Using Duplicity/Duplicati for Encrypted Backups
+
+For sensitive data, consider using encrypted backups.
+
+### Option A: Duplicity (Command Line)
+
+#### Step 1: Install Duplicity
+
+```bash
+sudo apt update
+sudo apt install duplicity
+```
+
+#### Step 2: Create an Encrypted Backup
+
+```bash
+duplicity --encrypt-key=YOUR_GPG_KEY /home/username /mnt/backup/duplicity-backup
+```
+Replace `YOUR_GPG_KEY` with your GPG key ID.
+
+### Option B: Duplicati (GUI)
+
+#### Step 1: Install Duplicati
+
+```bash
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+echo "deb http://www.duplicati.com/apt stable main" | sudo tee /etc/apt/sources.list.d/duplicati.list
+sudo apt update
+sudo apt install duplicati
+```
+
+#### Step 2: Configure Duplicati
+
+1. Open Duplicati web interface at http://localhost:8200/
+2. Click "Add backup"
+3. Configure your backup name, encryption settings, and destination
+4. Set a schedule
+5. Select source folders
+6. Start your backup
+
+## 5. Using Restic for Efficient, Encrypted Backups
+
+Restic is a modern backup solution with encryption and deduplication.
+
+### Step 1: Install Restic
+
+```bash
+sudo apt update
+sudo apt install restic
+```
+
+### Step 2: Initialize Repository
+
+```bash
+restic init --repo /mnt/backup/restic-repo
+```
+Set a strong password when prompted.
+
+### Step 3: Create a Backup
+
+```bash
+restic -r /mnt/backup/restic-repo backup /home/username
+```
+
+### Step 4: Schedule with Cron
+
+```bash
+crontab -e
+```
+
+Add this line for daily backups at 3 AM:
+```
+0 3 * * * restic -r /mnt/backup/restic-repo backup /home/username
+```
+
+## Best Practices for Reliable Backups
+
+1. **Follow the 3-2-1 Rule**:
+   - Keep 3 copies of your data
+   - Use 2 different storage types
+   - Keep 1 copy off-site
+
+2. **Test Your Backups**:
+   - Regularly verify that you can restore from your backups
+   - For Rsync backups, check files with:
+     ```bash
+     ls -la /mnt/backup/full-system-backup/
+     ```
+   - For other tools, use their built-in verification features
+
+3. **Rotate Backups**:
+   - Keep multiple backup generations
+   - For Timeshift, configure to keep daily, weekly, and monthly snapshots
+   - For manual backups, consider dating your backup folders
+
+4. **Monitor Backup Logs**:
+   - Check for success or failure notifications
+   - Set up email alerts for failed backups
+
+5. **Secure Your Backups**:
+   - Use encryption for sensitive data
+   - Protect your backup drives physically
+
+By implementing a reliable backup routine using one or more of these methods, you'll ensure your data remains safe and recoverable in case of any system issues or data loss events.

@@ -12,7 +12,7 @@ const projectsData: Project[] = [
     from Windows to Ubuntu, exploring the power, flexibility, and philosophy of open-source software. 
     From initial setup to daily workflows, I break down the key lessons learned along the way.`,
     imgSrc: '/static/images/ubuntu-migration.png',
-    href: '/projects/ubuntu-migration',
+    href: '/ubuntu-guides',
 },
 {
     title: 'Running a Local AI Model on Ubuntu',

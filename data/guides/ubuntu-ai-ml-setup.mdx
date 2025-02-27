@@ -1,0 +1,530 @@
+---
+title: How to Set Up AI and ML Tools on Ubuntu
+date: '2025-02-24'
+tags: ['ubuntu', 'ai', 'ml', 'guide']
+draft: false
+summary: A guide to setting up AI and ML tools on Ubuntu
+---
+
+# How to Set Up AI and ML Tools on Ubuntu
+
+This comprehensive guide will help you set up a robust environment for artificial intelligence (AI) and machine learning (ML) on Ubuntu, optimized for your RTX 4070 GPU and Ryzen 7 CPU.
+
+## Prerequisites
+
+- Ubuntu operating system (preferably 22.04 LTS or newer)
+- NVIDIA GPU with properly installed drivers (refer to the NVIDIA setup guide)
+- At least 16GB RAM (24GB or more recommended for larger models)
+- At least 100GB free disk space
+- Internet connection
+
+## Step 1: Set Up NVIDIA CUDA and cuDNN
+
+After installing NVIDIA drivers, you need to set up CUDA (Compute Unified Device Architecture) to unlock the full potential of your GPU for AI/ML tasks.
+
+### Install CUDA Toolkit
+
+```bash
+sudo apt update
+sudo apt install nvidia-cuda-toolkit
+```
+
+Verify CUDA installation:
+
+```bash
+nvcc --version
+```
+
+You should see output indicating the CUDA version.
+
+### Install cuDNN (CUDA Deep Neural Network library)
+
+cuDNN is a GPU-accelerated library for deep neural networks.
+
+1. Register for the NVIDIA Developer Program at [developer.nvidia.com](https://developer.nvidia.com/)
+2. Download cuDNN for your CUDA version
+3. Install the downloaded packages:
+
+```bash
+sudo dpkg -i cudnn*.deb
+```
+
+Or, as an easier alternative, install via conda (covered in a later section).
+
+## Step 2: Set Up Python for Data Science and ML
+
+### Method 1: Using System Python with Virtual Environments
+
+```bash
+# Install Python development tools
+sudo apt install python3-dev python3-pip python3-venv
+
+# Create a virtual environment
+mkdir -p ~/ml-projects
+cd ~/ml-projects
+python3 -m venv ml-env
+
+# Activate the environment
+source ml-env/bin/activate
+
+# Install essential data science and ML packages
+pip install numpy pandas scikit-learn matplotlib seaborn jupyter
+```
+
+### Method 2: Using Anaconda/Miniconda (Recommended)
+
+Anaconda/Miniconda provides better package management for data science and ML libraries.
+
+1. Download Miniconda:
+
+```bash
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+```
+
+2. Install Miniconda:
+
+```bash
+bash Miniconda3-latest-Linux-x86_64.sh
+```
+
+Follow the prompts and restart your terminal after installation.
+
+3. Create a conda environment with ML packages:
+
+```bash
+conda create -n ml-env python=3.10
+conda activate ml-env
+conda install numpy pandas scikit-learn matplotlib seaborn jupyter
+```
+
+4. Install CUDA and cuDNN through conda (simplifies the process):
+
+```bash
+conda install -c conda-forge cudatoolkit=11.8.0
+conda install -c conda-forge cudnn=8.4.1.50
+```
+
+## Step 3: Install Deep Learning Frameworks
+
+### TensorFlow with GPU Support
+
+```bash
+# If using pip
+pip install tensorflow
+
+# If using conda
+conda install -c conda-forge tensorflow
+```
+
+Verify TensorFlow GPU support:
+
+```python
+import tensorflow as tf
+print("GPU Available: ", tf.config.list_physical_devices('GPU'))
+print("TensorFlow version:", tf.__version__)
+```
+
+### PyTorch with GPU Support
+
+```bash
+# If using pip
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# If using conda
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+```
+
+Verify PyTorch GPU support:
+
+```python
+import torch
+print("CUDA Available:", torch.cuda.is_available())
+print("CUDA Version:", torch.version.cuda)
+print("PyTorch version:", torch.__version__)
+```
+
+## Step 4: Set Up Local LLM Infrastructure
+
+### Install Ollama for Local LLMs
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+Download and run models (examples):
+
+```bash
+# Download Llama 2 model
+ollama pull llama2
+
+# Run Llama 2 model
+ollama run llama2
+
+# Download more efficient model for your 8GB VRAM
+ollama pull mistral:7b
+ollama run mistral:7b
+```
+
+### Set Up Text Generation WebUI (Optional)
+
+For a more feature-rich UI to run multiple models:
+
+```bash
+git clone https://github.com/oobabooga/text-generation-webui
+cd text-generation-webui
+pip install -r requirements.txt
+```
+
+Run the WebUI:
+
+```bash
+python server.py --listen --api
+```
+
+Access the web interface at http://localhost:7860
+
+## Step 5: Set Up CrewAI for Agent-Based Workflows
+
+CrewAI lets you create autonomous AI agents that collaborate to accomplish complex tasks.
+
+```bash
+pip install crewai
+```
+
+Basic usage example:
+
+```python
+from crewai import Agent, Task, Crew
+from langchain.llms import Ollama
+
+# Initialize the LLM
+ollama_llm = Ollama(model="llama2")
+
+# Create agents
+researcher = Agent(
+    role="Researcher",
+    goal="Conduct comprehensive research on a given topic",
+    backstory="You are an expert researcher with a keen eye for detail",
+    llm=ollama_llm
+)
+
+writer = Agent(
+    role="Writer",
+    goal="Write compelling content based on research findings",
+    backstory="You are a talented writer who can explain complex topics clearly",
+    llm=ollama_llm
+)
+
+# Create tasks
+research_task = Task(
+    description="Research the latest developments in AI",
+    agent=researcher
+)
+
+writing_task = Task(
+    description="Write a blog post about AI developments based on the research",
+    agent=writer
+)
+
+# Create the crew
+crew = Crew(
+    agents=[researcher, writer],
+    tasks=[research_task, writing_task]
+)
+
+# Run the crew
+result = crew.kickoff()
+```
+
+## Step 6: Set Up Streamlit for AI Web Applications
+
+Streamlit makes it easy to create web interfaces for ML models.
+
+```bash
+pip install streamlit
+```
+
+Create a simple Streamlit app that uses your GPU:
+
+```python
+# app.py
+import streamlit as st
+import torch
+import numpy as np
+import matplotlib.pyplot as plt
+
+st.title("GPU Test with PyTorch")
+
+if torch.cuda.is_available():
+    st.success(f"CUDA is available with {torch.cuda.device_count()} GPU(s)!")
+    for i in range(torch.cuda.device_count()):
+        st.write(f"GPU {i}: {torch.cuda.get_device_name(i)}")
+else:
+    st.error("CUDA is not available!")
+
+# Generate some random data on the GPU
+@st.cache_data
+def generate_random_data(size):
+    return torch.randn(size, size, device="cuda" if torch.cuda.is_available() else "cpu")
+
+size = st.slider("Matrix size", 1000, 10000, 5000, 1000)
+
+if st.button("Generate and Multiply Matrices"):
+    with st.spinner("Generating matrices..."):
+        A = generate_random_data(size)
+        B = generate_random_data(size)
+    
+    with st.spinner("Multiplying matrices on GPU..."):
+        start_time = torch.cuda.Event(enable_timing=True)
+        end_time = torch.cuda.Event(enable_timing=True)
+        
+        start_time.record()
+        C = torch.matmul(A, B)
+        end_time.record()
+        
+        torch.cuda.synchronize()
+        elapsed_time = start_time.elapsed_time(end_time)
+        
+    st.success(f"Matrix multiplication completed in {elapsed_time:.2f} ms")
+    
+    # Display some statistics about the result
+    st.write(f"Result matrix shape: {C.shape}")
+    st.write(f"Mean value: {C.mean().item():.4f}")
+    st.write(f"Standard deviation: {C.std().item():.4f}")
+    
+    # Plot a histogram of values
+    fig, ax = plt.subplots()
+    ax.hist(C[0, :100].cpu().numpy(), bins=50)
+    ax.set_title("Distribution of values in first row (sample)")
+    st.pyplot(fig)
+```
+
+Run it:
+
+```bash
+streamlit run app.py
+```
+
+## Step 7: Set Up Jupyter for Interactive Development
+
+```bash
+pip install jupyterlab
+```
+
+Launch JupyterLab:
+
+```bash
+jupyter lab
+```
+
+Configure for remote access (optional):
+
+```bash
+jupyter lab --ip=0.0.0.0 --no-browser
+```
+
+## Step 8: Install Essential ML Libraries
+
+```bash
+pip install transformers datasets huggingface_hub scikit-learn xgboost lightgbm catboost optuna
+```
+
+## Step 9: Set Up Environment for Computer Vision
+
+```bash
+pip install opencv-python pillow albumentations
+```
+
+For specialized vision tasks and models:
+
+```bash
+pip install ultralytics  # For YOLOv8
+```
+
+## Step 10: Set Up Environment for NLP
+
+```bash
+pip install spacy nltk gensim
+python -m spacy download en_core_web_md
+```
+
+NLTK additional resources:
+
+```python
+import nltk
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
+```
+
+## Step 11: Set Up Tools for ML Experiment Tracking
+
+### Install MLflow
+
+```bash
+pip install mlflow
+```
+
+Launch MLflow tracking server:
+
+```bash
+mlflow server --host 0.0.0.0
+```
+
+### Install Weights & Biases (Optional)
+
+```bash
+pip install wandb
+wandb login
+```
+
+## Step 12: Install Tools for Data Visualization
+
+```bash
+pip install plotly dash bokeh seaborn
+```
+
+## Step 13: Set Up GPU Monitoring Tools
+
+### Install GPU Stats
+
+```bash
+pip install gpustat
+```
+
+Monitor GPU usage:
+
+```bash
+watch -n1 gpustat -cp
+```
+
+### Install NVIDIA System Management Interface
+
+```bash
+sudo apt install nvidia-smi
+```
+
+Monitor GPU usage continuously:
+
+```bash
+watch -n1 nvidia-smi
+```
+
+## Step 14: Set Up Docker for ML Projects (Optional)
+
+Docker helps create reproducible ML environments.
+
+```bash
+# Install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+# Add your user to the docker group
+sudo usermod -aG docker $USER
+```
+
+Log out and log back in for changes to take effect.
+
+Pull NVIDIA Docker images for ML:
+
+```bash
+docker pull nvidia/cuda:11.8.0-base-ubuntu22.04
+```
+
+Test NVIDIA Docker:
+
+```bash
+docker run --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi
+```
+
+## Step 15: Optimize System for ML Workloads
+
+### Increase Swap Space (Optional)
+
+If you encounter memory issues with large models:
+
+```bash
+# Create a 16GB swap file
+sudo fallocate -l 16G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+# Make swap permanent
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+### Optimize CPU Performance
+
+```bash
+sudo apt install cpufrequtils
+sudo cpufreq-set -g performance
+```
+
+### Adjust System Shared Memory
+
+For PyTorch DataLoader with multiple workers:
+
+```bash
+echo 'vm.max_map_count=1048576' | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+```
+
+## Additional Tips for Optimal Performance
+
+1. **Use Mixed Precision Training**: For faster training using 16-bit precision:
+   ```python
+   # PyTorch example
+   from torch.cuda.amp import autocast, GradScaler
+   
+   scaler = GradScaler()
+   
+   with autocast():
+       outputs = model(inputs)
+       loss = loss_fn(outputs, targets)
+   
+   scaler.scale(loss).backward()
+   scaler.step(optimizer)
+   scaler.update()
+   ```
+
+2. **Memory Optimization**:
+   - Use smaller batch sizes if you run out of memory
+   - Enable gradient checkpointing for large models
+   - Use model parallelism for large models
+   - Clean up unused tensors: `del x; torch.cuda.empty_cache()`
+
+3. **CPU and GPU Coordination**:
+   - Prefetch data using multiple CPU workers in DataLoader
+   - Pin memory for faster CPU to GPU transfers: `DataLoader(pin_memory=True)`
+
+4. **Model Quantization**:
+   - Use quantized models when possible to reduce memory usage
+
+## Troubleshooting Common Issues
+
+### CUDA Out of Memory Errors
+
+If you encounter "CUDA out of memory" errors:
+1. Reduce batch size
+2. Use gradient accumulation
+3. Implement mixed precision training
+4. Consider model pruning or quantization
+
+### Model Loading Issues
+
+For "model too large" errors when loading pretrained models:
+1. Load model with `device_map="auto"` in transformers
+2. Use quantization techniques (int8, int4)
+3. Split model across CPU and GPU
+
+### Slow Training
+
+If training is unexpectedly slow:
+1. Check if you're actually using the GPU (`nvidia-smi`)
+2. Verify that data loading isn't the bottleneck
+3. Use profilers to identify performance bottlenecks
+
+## Conclusion
+
+With these tools and configurations, your Ubuntu system with an RTX 4070 GPU and Ryzen 7
