@@ -1,0 +1,137 @@
+---
+title: How to Install Ubuntu on a PC
+date: '2025-02-27'
+tags: ['ubuntu', 'installation', 'guide']
+draft: false
+summary: A guide to installing Ubuntu on a PC
+---
+
+# How to Install Ubuntu on a PC
+
+This guide will walk you through the process of installing Ubuntu on your PC, from preparation to post-installation configuration.
+
+## Prerequisites
+
+- A PC with at least 4GB RAM (8GB recommended)
+- 25GB of free disk space (more recommended)
+- A USB drive with at least 4GB capacity
+- Backup of important data from your current system
+
+## Step 1: Prepare for Installation
+
+### Backup Your Data
+Before proceeding, back up all important data from your current operating system.
+
+### Download Ubuntu
+1. Visit the [official Ubuntu website](https://ubuntu.com/download/desktop)
+2. Download the latest LTS (Long Term Support) version of Ubuntu Desktop
+
+### Create a Bootable USB Drive
+1. On Windows:
+   - Download and install [Rufus](https://rufus.ie/en/)
+   - Insert your USB drive
+   - Open Rufus, select your USB drive and the Ubuntu ISO file
+   - Click "Start" and select "Write in ISO image mode"
+
+2. On macOS:
+   - Install Etcher from [balenaEtcher](https://www.balena.io/etcher/)
+   - Open Etcher
+   - Select the Ubuntu ISO file and your USB drive
+   - Click "Flash!"
+
+3. On Linux:
+   - Install Etcher or use the `dd` command:
+   ```bash
+   sudo dd bs=4M if=/path/to/ubuntu.iso of=/dev/sdX status=progress oflag=sync
+   ```
+   (Replace `/dev/sdX` with your USB drive, be careful to select the correct drive!)
+
+## Step 2: Configure BIOS/UEFI Settings
+
+1. Restart your computer and enter the BIOS/UEFI setup (usually by pressing F2, F12, Delete, or Esc during boot)
+2. Disable Secure Boot if enabled
+3. Set the boot mode to UEFI and Legacy (or "Both") if you have the option
+4. Save changes and exit
+
+## Step 3: Boot from the USB Drive
+
+1. With the USB drive plugged in, restart your computer
+2. Access the boot menu (usually by pressing F12, Esc, or F2 during startup)
+3. Select the USB drive from the boot menu
+4. When the Ubuntu boot menu appears, select "Try or Install Ubuntu"
+
+## Step 4: Install Ubuntu
+
+1. Once Ubuntu loads, click on "Install Ubuntu"
+2. Select your language and click "Continue"
+3. Choose "Normal installation" and select if you want to:
+   - Download updates while installing
+   - Install third-party software for graphics and Wi-Fi hardware
+4. Click "Continue"
+
+### Decide on Installation Type
+- **Install alongside existing OS (dual-boot)**: Choose "Install Ubuntu alongside [your current OS]"
+- **Replace existing OS**: Choose "Erase disk and install Ubuntu"
+- **Custom partitioning**: Choose "Something else"
+
+> **Note**: If you choose to dual-boot, make sure to back up your data first. If you're replacing your current OS, all data will be erased.
+
+5. Follow the prompts to configure your installation (time zone, keyboard layout, etc.)
+6. Create a user account:
+   - Enter your name
+   - Create a computer name
+   - Choose a username
+   - Set a strong password
+7. Click "Continue" to begin the installation
+8. Wait for the installation to complete (typically 10-20 minutes)
+
+## Step 5: Reboot and Log In
+
+1. When prompted, remove the USB drive and click "Restart Now"
+2. After rebooting, you'll see the login screen
+3. Enter your password to log in to your new Ubuntu system
+
+## Step 6: Post-Installation Setup
+
+### Update Your System
+1. Open Terminal (Ctrl+Alt+T)
+2. Run these commands:
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+### Install Additional Drivers
+1. Open the "Software & Updates" application
+2. Go to the "Additional Drivers" tab
+3. Install any recommended drivers, especially for graphics cards
+4. Restart your computer if prompted
+
+### Install Essential Software
+1. Open Ubuntu Software Center
+2. Browse and install applications you need (web browsers, office suite, multimedia tools, etc.)
+
+## Troubleshooting
+
+### Boot Issues
+- If you can't boot into Ubuntu, try disabling Fast Boot in Windows and in BIOS
+- Check if Secure Boot is disabled in BIOS/UEFI
+
+### Graphics Issues
+- If you experience graphics problems, try booting with the "nomodeset" parameter:
+  1. At the GRUB menu, press 'e' to edit
+  2. Find the line starting with "linux" and add "nomodeset" at the end
+  3. Press F10 to boot
+
+### Wi-Fi Problems
+- If Wi-Fi doesn't work, connect via Ethernet if possible
+- Run `sudo apt update && sudo apt install linux-firmware` to install additional firmware
+
+## Next Steps
+
+- [Set up automatic updates](#)
+- [Configure your backup routine](#)
+- [Install proprietary graphics drivers](#)
+- [Customize Ubuntu to your preferences](#)
+
+Congratulations! You've successfully installed Ubuntu on your PC.
