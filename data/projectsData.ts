@@ -3,6 +3,7 @@ interface Project {
   description: string
   href?: string
   imgSrc?: string
+  key: string
 }
 
 const projectsData: Project[] = [
@@ -13,6 +14,7 @@ const projectsData: Project[] = [
     From initial setup to daily workflows, I break down the key lessons learned along the way.`,
     imgSrc: '/static/images/linux.webp',
     href: '/ubuntu-guides',
+    key: 'ubuntu-guides'
 },
   {
   title: 'AI-Powered Speech-to-Text Web App',
@@ -22,6 +24,7 @@ const projectsData: Project[] = [
   accessibility and content creation.`,
   imgSrc: '/static/images/speech-to-text.webp',
   href: '/speech-to-text-app',
+  key: 'speech-to-text-app'
 },
 {
     title: 'Running a Local AI Model on Ubuntu',
@@ -30,6 +33,7 @@ const projectsData: Project[] = [
     to real-world performance, I dive into the potential of offline AI.`,
     imgSrc: '/static/images/local-ai.webp',
     href: '/local-ai',
+    key: 'local-ai'
 },
 
 ]

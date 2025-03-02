@@ -109,6 +109,8 @@ export const Guide = defineDocumentType(() => ({
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
+    project: { type: 'string' },
+    order: { type: 'number' },
   },
   computedFields: {
     ...computedFields,
