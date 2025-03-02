@@ -5,10 +5,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'sans': ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        'logo': ['Blinker', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        'mono': ['JetBrains Mono', 'monospace'],
-        'outfit': ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        logo: ['Blinker', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+        outfit: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       typography: ({ theme }) => ({
         DEFAULT: {

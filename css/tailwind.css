@@ -11,8 +11,9 @@
 /* Core theme configuration */
 @theme {
   /* Font families */
-  --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-sans:
+    'Outfit', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
 
   /* Colors */
   --color-primary-50: oklch(0.971 0.014 143.198);
@@ -72,11 +73,11 @@
     border-radius: var(--radius-sm);
     outline-color: var(--color-primary-500);
   }
-  
+
   :root {
     /* Darker grey colors for light mode */
     --color-primary-50: oklch(0.95 0.003 0);
-    --color-primary-100: oklch(0.90 0.003 0);
+    --color-primary-100: oklch(0.9 0.003 0);
     --color-primary-200: oklch(0.85 0.003 0);
     --color-primary-300: oklch(0.75 0.003 0);
     --color-primary-400: oklch(0.65 0.003 0);
@@ -84,8 +85,8 @@
     --color-primary-600: oklch(0.45 0.003 0);
     --color-primary-700: oklch(0.35 0.003 0);
     --color-primary-800: oklch(0.25 0.003 0);
-    --color-primary-900: oklch(0.20 0.003 0);
-    --color-primary-950: oklch(0.10 0.003 0);
+    --color-primary-900: oklch(0.2 0.003 0);
+    --color-primary-950: oklch(0.1 0.003 0);
   }
 
   .dark {
@@ -100,7 +101,7 @@
     --color-primary-700: oklch(0.425 0.223 163.958);
     --color-primary-800: oklch(0.359 0.187 163.815);
     --color-primary-900: oklch(0.308 0.153 162.432);
-    --color-primary-950: oklch(0.184 0.109 163.907);  
+    --color-primary-950: oklch(0.184 0.109 163.907);
   }
 }
 
@@ -189,5 +190,3 @@ input.h-8.w-full:focus {
 .dark input.h-8.w-full:focus {
   border: 2px solid #05621d !important;
 }
-
-

@@ -22,20 +22,25 @@ This guide will walk you through the process of installing Ubuntu on your PC, fr
 ## Step 1: Prepare for Installation
 
 ### Backup Your Data
+
 Before proceeding, back up all important data from your current operating system.
 
 ### Download Ubuntu
+
 1. Visit the [official Ubuntu website](https://ubuntu.com/download/desktop)
 2. Download the latest LTS (Long Term Support) version of Ubuntu Desktop
 
 ### Create a Bootable USB Drive
+
 1. On Windows:
+
    - Download and install [Rufus](https://rufus.ie/en/)
    - Insert your USB drive
    - Open Rufus, select your USB drive and the Ubuntu ISO file
    - Click "Start" and select "Write in ISO image mode"
 
 2. On macOS:
+
    - Install Etcher from [balenaEtcher](https://www.balena.io/etcher/)
    - Open Etcher
    - Select the Ubuntu ISO file and your USB drive
@@ -72,6 +77,7 @@ Before proceeding, back up all important data from your current operating system
 4. Click "Continue"
 
 ### Decide on Installation Type
+
 - **Install alongside existing OS (dual-boot)**: Choose "Install Ubuntu alongside [your current OS]"
 - **Replace existing OS**: Choose "Erase disk and install Ubuntu"
 - **Custom partitioning**: Choose "Something else"
@@ -96,36 +102,43 @@ Before proceeding, back up all important data from your current operating system
 ## Step 6: Post-Installation Setup
 
 ### Update Your System
+
 1. Open Terminal (Ctrl+Alt+T)
 2. Run these commands:
+
 ```bash
 sudo apt update
 sudo apt upgrade
 ```
 
 ### Install Additional Drivers
+
 1. Open the "Software & Updates" application
 2. Go to the "Additional Drivers" tab
 3. Install any recommended drivers, especially for graphics cards
 4. Restart your computer if prompted
 
 ### Install Essential Software
+
 1. Open Ubuntu Software Center
 2. Browse and install applications you need (web browsers, office suite, multimedia tools, etc.)
 
 ## Troubleshooting
 
 ### Boot Issues
+
 - If you can't boot into Ubuntu, try disabling Fast Boot in Windows and in BIOS
 - Check if Secure Boot is disabled in BIOS/UEFI
 
 ### Graphics Issues
+
 - If you experience graphics problems, try booting with the "nomodeset" parameter:
   1. At the GRUB menu, press 'e' to edit
   2. Find the line starting with "linux" and add "nomodeset" at the end
   3. Press F10 to boot
 
 ### Wi-Fi Problems
+
 - If Wi-Fi doesn't work, connect via Ethernet if possible
 - Run `sudo apt update && sudo apt install linux-firmware` to install additional firmware
 

@@ -275,25 +275,25 @@ if st.button("Generate and Multiply Matrices"):
     with st.spinner("Generating matrices..."):
         A = generate_random_data(size)
         B = generate_random_data(size)
-    
+
     with st.spinner("Multiplying matrices on GPU..."):
         start_time = torch.cuda.Event(enable_timing=True)
         end_time = torch.cuda.Event(enable_timing=True)
-        
+
         start_time.record()
         C = torch.matmul(A, B)
         end_time.record()
-        
+
         torch.cuda.synchronize()
         elapsed_time = start_time.elapsed_time(end_time)
-        
+
     st.success(f"Matrix multiplication completed in {elapsed_time:.2f} ms")
-    
+
     # Display some statistics about the result
     st.write(f"Result matrix shape: {C.shape}")
     st.write(f"Mean value: {C.mean().item():.4f}")
     st.write(f"Standard deviation: {C.std().item():.4f}")
-    
+
     # Plot a histogram of values
     fig, ax = plt.subplots()
     ax.hist(C[0, :100].cpu().numpy(), bins=50)
@@ -475,28 +475,31 @@ sudo sysctl -p
 ## Additional Tips for Optimal Performance
 
 1. **Use Mixed Precision Training**: For faster training using 16-bit precision:
+
    ```python
    # PyTorch example
    from torch.cuda.amp import autocast, GradScaler
-   
+
    scaler = GradScaler()
-   
+
    with autocast():
        outputs = model(inputs)
        loss = loss_fn(outputs, targets)
-   
+
    scaler.scale(loss).backward()
    scaler.step(optimizer)
    scaler.update()
    ```
 
 2. **Memory Optimization**:
+
    - Use smaller batch sizes if you run out of memory
    - Enable gradient checkpointing for large models
    - Use model parallelism for large models
    - Clean up unused tensors: `del x; torch.cuda.empty_cache()`
 
 3. **CPU and GPU Coordination**:
+
    - Prefetch data using multiple CPU workers in DataLoader
    - Pin memory for faster CPU to GPU transfers: `DataLoader(pin_memory=True)`
 
@@ -508,6 +511,7 @@ sudo sysctl -p
 ### CUDA Out of Memory Errors
 
 If you encounter "CUDA out of memory" errors:
+
 1. Reduce batch size
 2. Use gradient accumulation
 3. Implement mixed precision training
@@ -516,6 +520,7 @@ If you encounter "CUDA out of memory" errors:
 ### Model Loading Issues
 
 For "model too large" errors when loading pretrained models:
+
 1. Load model with `device_map="auto"` in transformers
 2. Use quantization techniques (int8, int4)
 3. Split model across CPU and GPU
@@ -523,6 +528,7 @@ For "model too large" errors when loading pretrained models:
 ### Slow Training
 
 If training is unexpectedly slow:
+
 1. Check if you're actually using the GPU (`nvidia-smi`)
 2. Verify that data loading isn't the bottleneck
 3. Use profilers to identify performance bottlenecks

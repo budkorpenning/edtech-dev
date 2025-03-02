@@ -37,6 +37,7 @@ sudo mkdir -p /mnt/backup
 ```bash
 sudo mount /dev/sda1 /mnt/backup
 ```
+
 Replace `sda1` with your actual drive identifier.
 
 #### Step 4: Verify the Mount
@@ -44,6 +45,7 @@ Replace `sda1` with your actual drive identifier.
 ```bash
 df -h
 ```
+
 Look for `/mnt/backup` in the output.
 
 ### Set Up Automatic Mounting
@@ -55,6 +57,7 @@ To ensure your drive mounts automatically every time you connect it:
 ```bash
 sudo blkid
 ```
+
 Copy the UUID of your drive (e.g., UUID="f124a11a-feab-49e7-8e4f-69883ed95016")
 
 #### Step 2: Edit /etc/fstab
@@ -64,6 +67,7 @@ sudo nano /etc/fstab
 ```
 
 Add this line to the end of the file (replace with your UUID):
+
 ```
 UUID=f124a11a-feab-49e7-8e4f-69883ed95016 /mnt/backup ext4 defaults,nofail,x-systemd.automount 0 2
 ```
@@ -77,11 +81,13 @@ sudo mount -a
 #### Step 4: Test Auto-Mount
 
 Reboot your system and check if the drive mounts automatically:
+
 ```bash
 sudo reboot
 ```
 
 After logging back in, verify with:
+
 ```bash
 df -h
 ```
@@ -95,6 +101,7 @@ sudo rsync -aAXv --delete --exclude={"/mnt/backup","/dev","/proc","/sys","/tmp",
 ```
 
 The command explained:
+
 - `-aAX`: Preserves permissions, links, and other attributes
 - `--delete`: Removes files in the destination that no longer exist in the source
 - `--exclude`: Skips unnecessary system directories
@@ -108,6 +115,7 @@ crontab -e
 ```
 
 Add this line to run backups every Sunday at 2 AM:
+
 ```
 0 2 * * 0 sudo rsync -aAXv --delete --exclude={"/mnt/backup","/dev","/proc","/sys","/tmp","/run","/mnt","/media","/lost+found","swap.img","/var/log","/var/tmp","/var/cache"} / /mnt/backup/full-system-backup/
 ```
@@ -192,6 +200,7 @@ sudo apt install duplicity
 ```bash
 duplicity --encrypt-key=YOUR_GPG_KEY /home/username /mnt/backup/duplicity-backup
 ```
+
 Replace `YOUR_GPG_KEY` with your GPG key ID.
 
 ### Option B: Duplicati (GUI)
@@ -230,6 +239,7 @@ sudo apt install restic
 ```bash
 restic init --repo /mnt/backup/restic-repo
 ```
+
 Set a strong password when prompted.
 
 ### Step 3: Create a Backup
@@ -245,6 +255,7 @@ crontab -e
 ```
 
 Add this line for daily backups at 3 AM:
+
 ```
 0 3 * * * restic -r /mnt/backup/restic-repo backup /home/username
 ```
@@ -252,11 +263,13 @@ Add this line for daily backups at 3 AM:
 ## Best Practices for Reliable Backups
 
 1. **Follow the 3-2-1 Rule**:
+
    - Keep 3 copies of your data
    - Use 2 different storage types
    - Keep 1 copy off-site
 
 2. **Test Your Backups**:
+
    - Regularly verify that you can restore from your backups
    - For Rsync backups, check files with:
      ```bash
@@ -265,11 +278,13 @@ Add this line for daily backups at 3 AM:
    - For other tools, use their built-in verification features
 
 3. **Rotate Backups**:
+
    - Keep multiple backup generations
    - For Timeshift, configure to keep daily, weekly, and monthly snapshots
    - For manual backups, consider dating your backup folders
 
 4. **Monitor Backup Logs**:
+
    - Check for success or failure notifications
    - Set up email alerts for failed backups
 

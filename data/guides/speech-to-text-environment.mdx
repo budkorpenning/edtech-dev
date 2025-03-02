@@ -68,18 +68,21 @@ Let's explain what each package does:
 PyAudio can sometimes be challenging to install. If you encounter issues, try these platform-specific solutions:
 
 #### On Windows:
+
 ```bash
 pip install pipwin
 pipwin install pyaudio
 ```
 
 #### On macOS:
+
 ```bash
 brew install portaudio
 pip install pyaudio
 ```
 
 #### On Linux (Ubuntu/Debian):
+
 ```bash
 sudo apt-get install python3-pyaudio
 ```
@@ -151,18 +154,18 @@ And a basic HTML template:
 <!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI Speech-to-Text App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  </head>
+  <body>
     <h1>Speech-to-Text Application</h1>
     <p>Environment setup successful!</p>
-    
+
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
+  </body>
 </html>
 ```
 
@@ -189,6 +192,7 @@ This will download the base model, which is about 142MB. The base model offers a
 ## Conclusion
 
 In this guide, we've:
+
 1. Created a virtual environment for our project
 2. Installed all necessary dependencies
 3. Set up the basic structure for our Flask application

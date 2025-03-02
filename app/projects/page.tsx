@@ -9,8 +9,8 @@ export const metadata = genPageMetadata({ title: 'Projects' })
 export default function Projects() {
   // Group guides by project
   const projectGuides = {}
-  
-  allGuides.forEach(guide => {
+
+  allGuides.forEach((guide) => {
     if (guide.project && !guide.draft) {
       if (!projectGuides[guide.project]) {
         projectGuides[guide.project] = []
@@ -18,9 +18,9 @@ export default function Projects() {
       projectGuides[guide.project].push(guide)
     }
   })
-  
+
   // Sort guides within each project by order
-  Object.keys(projectGuides).forEach(project => {
+  Object.keys(projectGuides).forEach((project) => {
     projectGuides[project].sort((a, b) => (a.order || 99) - (b.order || 99))
   })
 
@@ -38,8 +38,8 @@ export default function Projects() {
         <div className="container py-12">
           <div className="space-y-12">
             {projectsData.map((project) => {
-              const guides = projectGuides[project.key] || [];
-              
+              const guides = projectGuides[project.key] || []
+
               return (
                 <div key={project.title} className="lg:grid lg:grid-cols-2 lg:gap-8">
                   {/* Project Description Card */}
@@ -48,12 +48,15 @@ export default function Projects() {
                       <img
                         src={project.imgSrc || '/static/images/placeholder.png'}
                         alt={project.title}
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                     <div className="mt-6">
-                      <h2 className="mb-3 text-2xl font-bold leading-8 tracking-tight">
-                        <Link href={project.href || '#'} className="text-gray-900 dark:text-gray-100">
+                      <h2 className="mb-3 text-2xl leading-8 font-bold tracking-tight">
+                        <Link
+                          href={project.href || '#'}
+                          className="text-gray-900 dark:text-gray-100"
+                        >
                           {project.title}
                         </Link>
                       </h2>
@@ -62,14 +65,14 @@ export default function Projects() {
                       </p>
                       <Link
                         href={project.href || '#'}
-                        className="text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                        className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-base leading-6 font-medium"
                         aria-label={`Learn more about ${project.title}`}
                       >
                         Learn more &rarr;
                       </Link>
                     </div>
                   </div>
-                  
+
                   {/* Guides List Card */}
                   {guides.length > 0 && (
                     <div className="mt-6 h-full lg:mt-0">
@@ -80,13 +83,13 @@ export default function Projects() {
                         <div className="space-y-4">
                           {guides.map((guide, index) => (
                             <div key={guide.slug} className="flex items-start">
-                              <div className="mr-3 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200">
+                              <div className="bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200 mr-3 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
                                 {guide.order || index + 1}
                               </div>
                               <div className="flex-grow">
                                 <Link
                                   href={`/guides/${guide.slug}`}
-                                  className="font-medium text-gray-900 hover:text-primary-600 dark:text-gray-100 dark:hover:text-primary-400"
+                                  className="hover:text-primary-600 dark:hover:text-primary-400 font-medium text-gray-900 dark:text-gray-100"
                                 >
                                   {guide.title}
                                 </Link>

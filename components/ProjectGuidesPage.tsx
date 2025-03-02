@@ -13,24 +13,24 @@ interface ProjectGuidesPageProps {
 export default function ProjectGuidesPage({ projectKey }: ProjectGuidesPageProps) {
   // Get project data
   const project = projectsData.find((p) => p.key === projectKey)
-  
+
   if (!project) {
     return <div>Project not found</div>
   }
-  
+
   // Get all guides for this project
   const guides = allGuides
     .filter((guide) => guide.project === projectKey && !guide.draft)
     .sort((a, b) => (a.order || 99) - (b.order || 99))
-  
+
   // Create a unique list of all tags across the guides
   const tags = [...new Set(guides.flatMap((guide) => guide.tags || []))]
-  
+
   return (
     <SectionContainer>
       <div className="space-y-8">
         <PageTitle>{project.title}</PageTitle>
-        
+
         <div className="lg:grid lg:grid-cols-2 lg:gap-8">
           {/* Project Description Card */}
           <div className="h-full rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
@@ -42,11 +42,11 @@ export default function ProjectGuidesPage({ projectKey }: ProjectGuidesPageProps
               />
             </div>
             <div className="mt-6">
-              <div className="prose max-w-none dark:prose-invert">
+              <div className="prose dark:prose-invert max-w-none">
                 <p className="text-lg">{project.description}</p>
                 {tags.length > 0 && (
                   <div className="mt-4">
-                    <h3 className="mb-2 text-sm font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    <h3 className="mb-2 text-sm font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">
                       Topics covered
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -69,13 +69,13 @@ export default function ProjectGuidesPage({ projectKey }: ProjectGuidesPageProps
               <div className="space-y-4">
                 {guides.map((guide, index) => (
                   <div key={guide.slug} className="flex items-start">
-                    <div className="mr-3 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200">
+                    <div className="bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200 mr-3 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
                       {guide.order || index + 1}
                     </div>
                     <div className="flex-grow">
                       <Link
                         href={`/guides/${guide.slug}`}
-                        className="font-medium text-gray-900 hover:text-primary-600 dark:text-gray-100 dark:hover:text-primary-400"
+                        className="hover:text-primary-600 dark:hover:text-primary-400 font-medium text-gray-900 dark:text-gray-100"
                       >
                         {guide.title}
                       </Link>
@@ -94,4 +94,4 @@ export default function ProjectGuidesPage({ projectKey }: ProjectGuidesPageProps
       </div>
     </SectionContainer>
   )
-} 
+}

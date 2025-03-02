@@ -34,6 +34,7 @@ Ubuntu updates are categorized into:
 In the "Updates" tab, you can configure:
 
 1. **Automatically check for updates**:
+
    - Never
    - Daily (recommended)
    - Every two days
@@ -41,16 +42,19 @@ In the "Updates" tab, you can configure:
    - Every two weeks
 
 2. **When there are security updates**:
+
    - Display immediately (recommended)
    - Download automatically
    - Download and install automatically
 
 3. **When there are other updates**:
+
    - Display immediately
    - Download automatically (recommended)
    - Download and install automatically
 
 4. **Notify me of a new Ubuntu version**:
+
    - For long-term support versions
    - For any new version
    - Never
@@ -69,11 +73,13 @@ sudo apt install unattended-upgrades apt-listchanges
 ### Step 2: Configure Unattended Upgrades
 
 1. Edit the configuration file:
+
    ```bash
    sudo nano /etc/apt/apt.conf.d/50unattended-upgrades
    ```
 
 2. Look for and uncomment the following lines to enable automatic updates for security patches:
+
    ```
    Unattended-Upgrade::Allowed-Origins {
        "${distro_id}:${distro_codename}-security";
@@ -86,11 +92,13 @@ sudo apt install unattended-upgrades apt-listchanges
    Uncomment the additional lines if you want other types of updates.
 
 3. Enable automatic updates:
+
    ```bash
    sudo nano /etc/apt/apt.conf.d/20auto-upgrades
    ```
 
 4. Add the following lines:
+
    ```
    APT::Periodic::Update-Package-Lists "1";
    APT::Periodic::Download-Upgradeable-Packages "1";
@@ -99,6 +107,7 @@ sudo apt install unattended-upgrades apt-listchanges
    ```
 
    This sets up:
+
    - Daily update checking
    - Daily download of upgradable packages
    - Weekly cleanup of packages
@@ -161,32 +170,35 @@ You can configure notifications for available updates:
 You can create a simple script to update your system:
 
 1. Create a new file:
+
    ```bash
    nano ~/update-system.sh
    ```
 
 2. Add these lines:
+
    ```bash
    #!/bin/bash
    echo "Updating package lists..."
    sudo apt update
-   
+
    echo "Installing updates..."
    sudo apt upgrade -y
-   
+
    echo "Performing distribution upgrades if needed..."
    sudo apt dist-upgrade -y
-   
+
    echo "Removing unnecessary packages..."
    sudo apt autoremove -y
-   
+
    echo "Cleaning up..."
    sudo apt autoclean
-   
+
    echo "Update completed!"
    ```
 
 3. Make the script executable:
+
    ```bash
    chmod +x ~/update-system.sh
    ```

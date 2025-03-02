@@ -167,6 +167,7 @@ sudo apt install nvidia-prime
 ### Switch Between GPUs
 
 - Use integrated graphics (better battery life):
+
   ```bash
   sudo prime-select intel  # For Intel integrated graphics
   # OR
@@ -174,6 +175,7 @@ sudo apt install nvidia-prime
   ```
 
 - Use NVIDIA graphics (better performance):
+
   ```bash
   sudo prime-select nvidia
   ```
@@ -200,6 +202,7 @@ nvidia-settings
 ```
 
 From here, you can configure:
+
 - Display resolution and refresh rate
 - Multiple monitor setup
 - PowerMizer settings (power management)
@@ -212,6 +215,7 @@ From here, you can configure:
 For maximum GPU performance:
 
 1. Open NVIDIA Settings:
+
    ```bash
    nvidia-settings
    ```
@@ -226,9 +230,11 @@ For maximum GPU performance:
 
 1. Check if Secure Boot is enabled in BIOS - it may need to be disabled
 2. Check if NVIDIA modules are loaded:
+
    ```bash
    lsmod | grep nvidia
    ```
+
    If nothing is returned, the modules aren't loaded.
 
 3. Try reinstalling the driver:
@@ -275,11 +281,13 @@ Look for any error messages related to NVIDIA.
 When a new driver version becomes available:
 
 1. Remove old driver (optional, but recommended to avoid conflicts):
+
    ```bash
    sudo apt purge *nvidia*
    ```
 
 2. Install the new driver:
+
    ```bash
    sudo apt update
    sudo apt install nvidia-driver-XXX  # Replace XXX with the new version

@@ -23,8 +23,8 @@ export default function Home({ posts }) {
           {!posts.length && 'No posts found.'}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
             const { slug, date, title, summary, tags, project } = post
-            const projectData = project ? projectsData.find(p => p.key === project) : null
-            
+            const projectData = project ? projectsData.find((p) => p.key === project) : null
+
             return (
               <li key={slug} className="py-12">
                 <article>
@@ -40,18 +40,15 @@ export default function Home({ posts }) {
                         <div>
                           <dt className="sr-only">Project</dt>
                           <dd>
-                            <Link 
-                              href={projectData.href || '#'} 
-                              className="group block xl:pr-8"
-                            >
-                              <div className="relative h-24 w-24 overflow-hidden rounded-lg mb-2">
+                            <Link href={projectData.href || '#'} className="group block xl:pr-8">
+                              <div className="relative mb-2 h-24 w-24 overflow-hidden rounded-lg">
                                 <img
                                   src={projectData.imgSrc || '/static/images/placeholder.png'}
                                   alt={projectData.title || 'Project'}
                                   className="h-full w-full object-cover"
                                 />
                               </div>
-                              <span className="block text-sm font-medium text-gray-600 group-hover:text-primary-600 dark:text-gray-400 dark:group-hover:text-primary-400 line-clamp-2">
+                              <span className="group-hover:text-primary-600 dark:group-hover:text-primary-400 line-clamp-2 block text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {projectData.title}
                               </span>
                             </Link>
