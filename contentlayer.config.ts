@@ -60,7 +60,7 @@ const computedFields: ComputedFields = {
 }
 
 /**
- * Count the occurrences of all tags across guides posts and write to json file
+ * Count the occurrences of all tags across guide posts and write to json file
  */
 async function createTagCount(allGuides) {
   const tagCount: Record<string, number> = {}
@@ -93,8 +93,8 @@ function createSearchIndex(allGuides) {
   }
 }
 
-export const Guide = defineDocumentType(() => ({
-  name: 'Guide',
+export const Guides = defineDocumentType(() => ({
+  name: 'Guides',
   filePathPattern: 'guides/**/*.mdx',
   contentType: 'mdx',
   fields: {
@@ -151,7 +151,7 @@ export const Authors = defineDocumentType(() => ({
 
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Guide, Authors],
+  documentTypes: [Guides, Authors],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [
