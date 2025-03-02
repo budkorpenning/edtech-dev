@@ -14,6 +14,15 @@ const projectsData: Project[] = [
     imgSrc: '/static/images/ubuntu-migration.png',
     href: '/ubuntu-guides',
 },
+  {
+  title: 'AI-Powered Speech-to-Text Web App',
+  description: `Build a practical speech-to-text application using local AI models. This project walks 
+  through the entire process of creating a web application that transcribes spoken audio in real-time 
+  with open-source AI technology. Perfect for educators and students looking to leverage AI for better 
+  accessibility and content creation.`,
+  imgSrc: '/static/images/speech-to-text-app.png',
+  href: '/speech-to-text-app',
+},
 {
     title: 'Running a Local AI Model on Ubuntu',
     description: `Exploring the power of local AI models without relying on the cloud. This project details 

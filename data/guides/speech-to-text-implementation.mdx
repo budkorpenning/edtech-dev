@@ -1,0 +1,538 @@
+---
+title: 'AI Speech-to-Text Web App: Creating the Application'
+date: '2025-03-03'
+tags: ['ai', 'speech-to-text', 'whisper', 'python', 'flask', 'javascript']
+draft: false
+summary: 'A step-by-step guide to building the files for your AI-powered speech-to-text web application'
+project: 'speech-to-text-app'
+order: 3
+filename: 'speech-to-text-implementation'
+---
+
+# AI Speech-to-Text Web App: Creating the Application
+
+In this guide, we'll build all the necessary files for our AI-powered speech-to-text web application. We'll create a Flask backend that interfaces with Whisper and a web frontend that allows users to record and transcribe audio.
+
+## Understanding the Application Architecture
+
+Our application consists of several components:
+
+1. **Flask Backend**: Handles HTTP requests and interfaces with the Whisper model
+2. **Whisper Model**: Processes audio and generates transcriptions
+3. **Web Frontend**: Provides an interface for recording audio and displaying results
+4. **Audio Processing**: Records, processes, and sends audio to the backend
+
+Let's create each component step by step.
+
+## Building the Flask Backend (app.py)
+
+First, let's create our main application file:
+
+```python
+# app.py
+import os
+import tempfile
+from flask import Flask, render_template, request, jsonify
+import whisper
+import numpy as np
+
+app = Flask(__name__)
+
+# Load the Whisper model (using the "base" model for balance of accuracy and speed)
+model = whisper.load_model("base")
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/transcribe', methods=['POST'])
+def transcribe():
+    if 'audio' not in request.files:
+        return jsonify({'error': 'No audio file provided'}), 400
+    
+    # Get the audio file from the request
+    audio_file = request.files['audio']
+    
+    # Create a temporary file to store the audio
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as temp_audio:
+        audio_file.save(temp_audio.name)
+        temp_audio_path = temp_audio.name
+    
+    try:
+        # Transcribe the audio using Whisper
+        result = model.transcribe(temp_audio_path)
+        transcription = result['text']
+        
+        # Return the transcription
+        return jsonify({'transcription': transcription})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        # Clean up the temporary file
+        os.unlink(temp_audio_path)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+This code does the following:
+- Imports necessary libraries
+- Creates a Flask application
+- Loads the Whisper model
+- Defines a route for the main page
+- Creates an API endpoint (/transcribe) that accepts audio files and returns transcriptions
+- Handles file saving, transcription, and cleanup
+
+## Creating the HTML Template (templates/index.html)
+
+Now, let's create our main HTML template:
+
+```html
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Speech-to-Text App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h1>AI Speech-to-Text</h1>
+                        <p class="text-muted">Powered by Whisper running locally</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <button id="recordButton" class="btn btn-primary btn-lg">
+                                <span id="recordIcon">🎤</span> <span id="recordText">Start Recording</span>
+                            </button>
+                        </div>
+                        
+                        <div class="alert alert-info" id="status" style="display: none;">
+                            Recording... Speak now.
+                        </div>
+                        
+                        <div class="progress mb-3" style="display: none;" id="progressContainer">
+                            <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="transcription" class="form-label fw-bold">Transcription:</label>
+                            <div id="transcriptionContainer">
+                                <textarea id="transcription" class="form-control" rows="6" readonly></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <button id="copyButton" class="btn btn-outline-secondary" disabled>Copy to Clipboard</button>
+                            <button id="clearButton" class="btn btn-outline-danger" disabled>Clear</button>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center text-muted">
+                        <small>All processing happens locally on your device. No data is sent to external servers.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
+```
+
+This HTML file creates a responsive interface with:
+- A button to start/stop recording
+- A status indicator
+- A progress bar for transcription
+- A text area to display the transcribed text
+- Buttons to copy and clear the transcription
+- Informative messages about privacy
+
+## Adding CSS Styles (static/css/style.css)
+
+Let's add some custom styles to enhance our user interface:
+
+```css
+/* static/css/style.css */
+body {
+    background-color: #f5f5f5;
+}
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eaeaea;
+    padding: 1.5rem;
+}
+
+.card-header h1 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+#recordButton {
+    transition: all 0.3s ease;
+    min-width: 180px;
+}
+
+#recordButton.recording {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+#transcription {
+    background-color: #fff;
+    font-size: 1.1rem;
+}
+
+#status {
+    font-weight: 500;
+}
+
+#progressContainer {
+    height: 10px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0069d9;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .card-header {
+        padding: 1rem;
+    }
+    
+    .card-header h1 {
+        font-size: 1.5rem;
+    }
+}
+```
+
+These styles create a clean, modern interface with visual feedback during recording.
+
+## Implementing JavaScript Functionality (static/js/main.js)
+
+Finally, let's create the JavaScript code to handle audio recording and communication with the backend:
+
+```javascript
+// static/js/main.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Get UI elements
+    const recordButton = document.getElementById('recordButton');
+    const recordText = document.getElementById('recordText');
+    const recordIcon = document.getElementById('recordIcon');
+    const status = document.getElementById('status');
+    const transcription = document.getElementById('transcription');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+    const copyButton = document.getElementById('copyButton');
+    const clearButton = document.getElementById('clearButton');
+    
+    // Audio recording variables
+    let mediaRecorder;
+    let audioChunks = [];
+    let isRecording = false;
+    let stream;
+    
+    // Add event listeners
+    recordButton.addEventListener('click', toggleRecording);
+    copyButton.addEventListener('click', copyTranscription);
+    clearButton.addEventListener('click', clearTranscription);
+    
+    // Function to toggle recording state
+    async function toggleRecording() {
+        if (!isRecording) {
+            // Start recording
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                startRecording(stream);
+            } catch (err) {
+                alert('Error accessing microphone: ' + err.message);
+                console.error('Error accessing microphone:', err);
+            }
+        } else {
+            // Stop recording
+            stopRecording();
+        }
+    }
+    
+    // Function to start recording
+    function startRecording(stream) {
+        audioChunks = [];
+        mediaRecorder = new MediaRecorder(stream);
+        
+        mediaRecorder.addEventListener('dataavailable', event => {
+            audioChunks.push(event.data);
+        });
+        
+        mediaRecorder.addEventListener('stop', sendAudioForTranscription);
+        
+        // Start recording
+        mediaRecorder.start();
+        isRecording = true;
+        
+        // Update UI
+        recordButton.classList.add('recording');
+        recordText.textContent = 'Stop Recording';
+        recordIcon.textContent = '⏹️';
+        status.style.display = 'block';
+    }
+    
+    // Function to stop recording
+    function stopRecording() {
+        if (mediaRecorder && isRecording) {
+            mediaRecorder.stop();
+            stream.getTracks().forEach(track => track.stop());
+            isRecording = false;
+            
+            // Update UI
+            recordButton.classList.remove('recording');
+            recordText.textContent = 'Start Recording';
+            recordIcon.textContent = '🎤';
+            status.textContent = 'Processing audio...';
+            progressContainer.style.display = 'block';
+            updateProgress(10); // Initial progress
+        }
+    }
+    
+    // Function to send audio for transcription
+    function sendAudioForTranscription() {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'recording.wav');
+        
+        updateProgress(30); // Update progress
+        
+        // Send the audio to the server
+        fetch('/transcribe', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            updateProgress(70);
+            if (!response.ok) {
+                throw new Error('Server returned ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            updateProgress(100);
+            
+            if (data.error) {
+                alert('Error: ' + data.error);
+                status.textContent = 'Error: ' + data.error;
+            } else {
+                // Display the transcription
+                const currentText = transcription.value;
+                transcription.value = currentText ? 
+                    currentText + '\n\n' + data.transcription : 
+                    data.transcription;
+                
+                // Enable buttons
+                copyButton.disabled = false;
+                clearButton.disabled = false;
+                
+                // Hide status and progress
+                setTimeout(() => {
+                    status.style.display = 'none';
+                    progressContainer.style.display = 'none';
+                }, 1000);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            status.textContent = 'Error: ' + error.message;
+            updateProgress(0);
+        });
+    }
+    
+    // Function to update progress bar
+    function updateProgress(value) {
+        progressBar.style.width = value + '%';
+        progressBar.setAttribute('aria-valuenow', value);
+    }
+    
+    // Function to copy transcription to clipboard
+    function copyTranscription() {
+        transcription.select();
+        document.execCommand('copy');
+        
+        // Visual feedback
+        copyButton.textContent = 'Copied!';
+        setTimeout(() => {
+            copyButton.textContent = 'Copy to Clipboard';
+        }, 2000);
+    }
+    
+    // Function to clear transcription
+    function clearTranscription() {
+        transcription.value = '';
+        copyButton.disabled = true;
+        clearButton.disabled = true;
+    }
+});
+```
+
+This JavaScript code:
+- Initializes all UI elements
+- Sets up event listeners for button clicks
+- Manages audio recording using the MediaRecorder API
+- Handles sending audio to the server for transcription
+- Updates the UI based on the current state
+- Provides functionality to copy and clear the transcription
+
+## Creating a Recorder Helper Module (optional)
+
+For more advanced audio processing, we can create a dedicated module:
+
+```python
+# recorder.py
+import pyaudio
+import wave
+import tempfile
+import numpy as np
+
+class AudioRecorder:
+    def __init__(self, channels=1, rate=16000, chunk=1024, format=pyaudio.paInt16):
+        self.channels = channels
+        self.rate = rate
+        self.chunk = chunk
+        self.format = format
+        self.audio = pyaudio.PyAudio()
+        self.stream = None
+        self.frames = []
+    
+    def start_recording(self):
+        self.frames = []
+        self.stream = self.audio.open(
+            format=self.format,
+            channels=self.channels,
+            rate=self.rate,
+            input=True,
+            frames_per_buffer=self.chunk
+        )
+    
+    def stop_recording(self):
+        if self.stream and not self.stream.is_stopped():
+            self.stream.stop_stream()
+            self.stream.close()
+        self.stream = None
+    
+    def record_for_duration(self, duration_seconds):
+        self.start_recording()
+        for _ in range(0, int(self.rate / self.chunk * duration_seconds)):
+            data = self.stream.read(self.chunk)
+            self.frames.append(data)
+        self.stop_recording()
+    
+    def save_to_file(self, filename):
+        with wave.open(filename, 'wb') as wf:
+            wf.setnchannels(self.channels)
+            wf.setsampwidth(self.audio.get_sample_size(self.format))
+            wf.setframerate(self.rate)
+            wf.writeframes(b''.join(self.frames))
+    
+    def get_temp_file(self):
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.wav')
+        self.save_to_file(temp_file.name)
+        return temp_file.name
+    
+    def cleanup(self):
+        if self.stream:
+            self.stop_recording()
+        self.audio.terminate()
+
+# Usage example:
+# recorder = AudioRecorder()
+# recorder.start_recording()
+# # ... wait for user to finish speaking
+# recorder.stop_recording()
+# audio_file = recorder.get_temp_file()
+# # Use audio_file with Whisper
+# recorder.cleanup()
+```
+
+This module provides more control over audio recording, which can be useful for more advanced applications.
+
+## Modify app.py to Use the Recorder Helper (optional)
+
+If using the optional recorder module, you would update app.py:
+
+```python
+# app.py
+from flask import Flask, render_template, request, jsonify
+import whisper
+import os
+from recorder import AudioRecorder
+
+app = Flask(__name__)
+model = whisper.load_model("base")
+
+# Rest of the code...
+```
+
+## Running the Application
+
+Now that all files are created, run the application:
+
+```bash
+python app.py
+```
+
+Open your web browser and navigate to `http://127.0.0.1:5000/`. You should see your speech-to-text application ready to use!
+
+## Conclusion
+
+In this guide, we've created all the necessary files for our AI-powered speech-to-text web application:
+
+1. **app.py**: The Flask backend that interfaces with Whisper
+2. **index.html**: The web interface
+3. **style.css**: Custom styling
+4. **main.js**: JavaScript functionality for audio recording and communication
+5. **recorder.py** (optional): Advanced audio recording functionality
+
+In the next guide, we'll summarize the project, discuss potential improvements, and explore how this application can be valuable in educational technology settings.
