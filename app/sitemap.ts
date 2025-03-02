@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { allNews } from 'contentlayer/generated'
+import { allGuides } from 'contentlayer/generated'
 import siteMetadata from '@/data/siteMetadata'
 
 export const dynamic = 'force-static'
@@ -7,7 +7,7 @@ export const dynamic = 'force-static'
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = siteMetadata.siteUrl
 
-  const newsRoutes = allNews
+  const newsRoutes = allGuides
     .filter((post) => !post.draft)
     .map((post) => ({
       url: `${siteUrl}/${post.path}`,
