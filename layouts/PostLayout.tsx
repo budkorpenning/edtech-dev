@@ -58,29 +58,33 @@ const ProjectNavigation = ({ content }) => {
       </div>
       
       <div className="flex flex-col space-y-2 text-sm sm:flex-row sm:justify-between sm:space-y-0">
-        {prevGuide ? (
-          <Link 
-            href={`/guides/${prevGuide.slug}`} 
-            className="inline-flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            {prevGuide.title.length > 50 ? prevGuide.title.substring(0, 50) + '...' : prevGuide.title}
-          </Link>
-        ) : <div></div>}
+        <div className="min-h-[24px] sm:w-[240px]">
+          {prevGuide ? (
+            <Link 
+              href={`/guides/${prevGuide.slug}`} 
+              className="inline-flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="mr-1 h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="line-clamp-1">{prevGuide.title}</span>
+            </Link>
+          ) : <div></div>}
+        </div>
         
-        {nextGuide && (
-          <Link 
-            href={`/guides/${nextGuide.slug}`} 
-            className="inline-flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
-          >
-            {nextGuide.title.length > 50 ? nextGuide.title.substring(0, 50) + '...' : nextGuide.title}
-            <svg xmlns="http://www.w3.org/2000/svg" className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        )}
+        <div className="min-h-[24px] sm:w-[240px] text-right">
+          {nextGuide && (
+            <Link 
+              href={`/guides/${nextGuide.slug}`} 
+              className="inline-flex items-center justify-end text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+            >
+              <span className="line-clamp-1">{nextGuide.title}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="ml-1 h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          )}
+        </div>
       </div>
       
       <div className="mt-4 overflow-x-auto">
@@ -117,29 +121,20 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
       <ScrollTopAndComment />
       <article>
         <div className="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
-          <header className="pt-6 xl:pb-6">
-            <div className="space-y-1 text-center">
-              <dl className="space-y-10">
-                <div>
-                  <dt className="sr-only">Published on</dt>
-                  <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
-                    <time dateTime={date}>
-                      {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
-                    </time>
-                  </dd>
-                </div>
-              </dl>
-              <div>
-                <PageTitle>{title}</PageTitle>
-              </div>
-            </div>
-          </header>
           <div className="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700">
             <div className="divide-y divide-gray-200 pb-0 dark:divide-gray-700">
               {/* Project navigation component */}
               <ProjectNavigation content={content} />
               
-              <div className="prose dark:prose-invert max-w-none pt-10 pb-8">{children}</div>
+              <div>
+                <div className="mb-2 text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
+                  <time dateTime={date}>
+                    {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
+                  </time>
+                </div>
+                <div className="prose dark:prose-invert max-w-none pt-10 pb-8">{children}</div>
+              </div>
+              
               <div className="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
                 <Link href={discussUrl(path)} rel="nofollow">
                   Discuss on Twitter
