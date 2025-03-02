@@ -22,7 +22,7 @@ interface ListLayoutProps {
 }
 
 function Pagination({ totalPages, currentPage }: PaginationProps) {
-  const pathname = usePathname()
+  const pathname = usePathname() ?? ''
   const segments = pathname.split('/')
   const lastSegment = segments[segments.length - 1]
   const basePath = pathname
@@ -73,7 +73,7 @@ export default function ListLayoutWithTags({
   initialDisplayPosts = [],
   pagination,
 }: ListLayoutProps) {
-  const pathname = usePathname()
+  const pathname = usePathname() ?? ''
   const tagCounts = tagData as Record<string, number>
   const tagKeys = Object.keys(tagCounts)
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
@@ -98,14 +98,14 @@ export default function ListLayoutWithTags({
                   href={`/guides`}
                   className="hover:text-primary-500 dark:hover:text-primary-500 font-bold text-gray-700 uppercase dark:text-gray-300"
                 >
-                  All Guides
+                  Guides
                 </Link>
               )}
               <ul>
                 {sortedTags.map((t) => {
                   return (
                     <li key={t} className="my-3">
-                      {decodeURI(pathname.split('/tags/')[1]) === slug(t) ? (
+                      {pathname?.includes('/tags/') && decodeURI(pathname.split('/tags/')[1]) === slug(t) ? (
                         <h3 className="text-primary-500 inline px-3 py-2 text-sm font-bold uppercase">
                           {`${t} (${tagCounts[t]})`}
                         </h3>

@@ -3,6 +3,7 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
 import NewsletterForm from 'pliny/ui/NewsletterForm'
+import projectsData from '@/data/projectsData'
 
 const MAX_DISPLAY = 5
 
@@ -21,16 +22,42 @@ export default function Home({ posts }) {
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!posts.length && 'No posts found.'}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
-            const { slug, date, title, summary, tags } = post
+            const { slug, date, title, summary, tags, project } = post
+            const projectData = project ? projectsData.find(p => p.key === project) : null
+            
             return (
               <li key={slug} className="py-12">
                 <article>
                   <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
-                    <dl>
-                      <dt className="sr-only">Published on</dt>
-                      <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
-                        <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
-                      </dd>
+                    <dl className="space-y-4">
+                      <div>
+                        <dt className="sr-only">Published on</dt>
+                        <dd className="text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
+                          <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+                        </dd>
+                      </div>
+                      {projectData && (
+                        <div>
+                          <dt className="sr-only">Project</dt>
+                          <dd>
+                            <Link 
+                              href={projectData.href || '#'} 
+                              className="group block xl:pr-8"
+                            >
+                              <div className="relative h-24 w-24 overflow-hidden rounded-lg mb-2">
+                                <img
+                                  src={projectData.imgSrc || '/static/images/placeholder.png'}
+                                  alt={projectData.title || 'Project'}
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+                              <span className="block text-sm font-medium text-gray-600 group-hover:text-primary-600 dark:text-gray-400 dark:group-hover:text-primary-400 line-clamp-2">
+                                {projectData.title}
+                              </span>
+                            </Link>
+                          </dd>
+                        </div>
+                      )}
                     </dl>
                     <div className="space-y-5 xl:col-span-3">
                       <div className="space-y-6">
@@ -75,9 +102,9 @@ export default function Home({ posts }) {
           <Link
             href="/guides"
             className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-            aria-label="All guides"
+            aria-label="Guides"
           >
-            All Guides &rarr;
+            Guides &rarr;
           </Link>
         </div>
       )}

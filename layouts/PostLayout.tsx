@@ -10,6 +10,7 @@ import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import { allGuides } from 'contentlayer/generated'
+import projectsData from '@/data/projectsData'
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
 const discussUrl = (path) =>
@@ -48,13 +49,36 @@ const ProjectNavigation = ({ content }) => {
   const prevGuide = currentIndex > 0 ? projectGuides[currentIndex - 1] : null
   const nextGuide = currentIndex < projectGuides.length - 1 ? projectGuides[currentIndex + 1] : null
   
+  // Find project data
+  const projectData = projectsData.find(p => p.key === project)
+  
   return (
     <div className="mb-8 mt-2 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900">
-      <div className="mb-3 font-semibold text-gray-900 dark:text-gray-100">
-        <span className="mr-2 inline-block rounded bg-primary-600/10 px-2 py-1 text-xs text-primary-600 dark:bg-primary-400/10 dark:text-primary-400">
-          Project
-        </span>
-        {project.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+      <div className="flex items-center gap-4 mb-3">
+        <Link href={projectData?.href || '#'} className="flex-shrink-0">
+          <div className="relative h-24 w-24 overflow-hidden rounded-lg">
+            <img
+              src={projectData?.imgSrc || '/static/images/placeholder.png'}
+              alt={projectData?.title || 'Project'}
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </Link>
+        <div>
+          <Link 
+            href={projectData?.href || '#'}
+            className="hover:text-primary-600 dark:hover:text-primary-400"
+          >
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              {projectData?.title || project.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+            </h3>
+          </Link>
+          <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <span className="mr-2 inline-block rounded bg-primary-600/10 px-2 py-1 text-xs text-primary-600 dark:bg-primary-400/10 dark:text-primary-400">
+              Step {currentIndex + 1} of {projectGuides.length}
+            </span>
+          </div>
+        </div>
       </div>
       
       <div className="flex flex-col space-y-2 text-sm sm:flex-row sm:justify-between sm:space-y-0">
