@@ -1,9 +1,9 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Free & Open AI Solutions',
+  title: 'Affordable AI Solutions',
   author: 'EdtechAgent.AI',
   headerTitle: 'EdtechAgent.AI',
-  description: 'Free & Open AI Solutions',
+  description: 'Affordable AI Solutions',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-guides.vercel.app',
