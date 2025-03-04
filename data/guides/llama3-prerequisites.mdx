@@ -1,0 +1,136 @@
+---
+title: 'Llama 3 Local Setup: Prerequisites and System Setup'
+date: '2025-03-04'
+tags: ['ai', 'llama', 'local-ai', 'setup']
+draft: false
+summary: 'A comprehensive guide to preparing your system for running Llama 3 locally'
+project: 'local-ai'
+order: 1
+---
+
+# Llama 3 Local Setup: Prerequisites and System Setup
+
+This guide will walk you through preparing your system to run Llama 3.1 8B locally. We'll focus on setting up the necessary environment and ensuring your system meets all requirements.
+
+## System Requirements
+
+Before beginning, ensure your system meets these minimum specifications:
+
+- NVIDIA GPU with at least 8GB VRAM (guide optimized for RTX 4070)
+- Ubuntu operating system
+- Python 3.8 or newer
+- At least 16GB system RAM
+- 20GB free disk space
+
+## Installing System Dependencies
+
+First, we'll install the necessary system packages. Open your terminal and run:
+
+```bash
+# Update package list
+sudo apt update
+
+# Install required packages
+sudo apt install python3-venv git git-lfs -y
+
+# Initialize Git LFS (Large File Storage)
+git lfs install
+```
+
+## Setting Up Python Environment
+
+We'll create a dedicated virtual environment for our Llama 3 project:
+
+```bash
+# Create project directory
+mkdir ~/llama3_project
+cd ~/llama3_project
+
+# Create subdirectories
+mkdir models webui
+
+# Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Upgrade pip
+pip install --upgrade pip
+```
+
+## Installing CUDA and PyTorch
+
+For optimal performance, we need to install PyTorch with CUDA support:
+
+```bash
+# Install PyTorch with CUDA support
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+
+# Install additional dependencies
+pip install transformers accelerate bitsandbytes
+```
+
+## Verifying GPU Setup
+
+To ensure your GPU is properly recognized and configured:
+
+1. Check NVIDIA driver installation:
+```bash
+nvidia-smi
+```
+
+You should see output showing your GPU (RTX 4070) and driver version.
+
+2. Verify CUDA availability in Python:
+```python
+import torch
+print("CUDA available:", torch.cuda.is_available())
+print("CUDA version:", torch.version.cuda)
+```
+
+## Environment Variables (Optional)
+
+For optimal performance, you can set these environment variables:
+
+```bash
+# Add to your ~/.bashrc file
+export CUDA_VISIBLE_DEVICES=0
+export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+```
+
+## Troubleshooting Common Issues
+
+### CUDA Not Found
+If you see "CUDA not available" errors:
+1. Verify NVIDIA drivers are installed
+2. Ensure CUDA toolkit is properly installed
+3. Reinstall PyTorch with the correct CUDA version
+
+### Out of Memory Errors
+If you encounter memory issues:
+1. Close unnecessary applications
+2. Reduce browser tabs
+3. Consider increasing swap space
+
+### Python Version Conflicts
+If you encounter Python version issues:
+1. Verify Python version: `python --version`
+2. Create a new virtual environment with the correct Python version
+3. Reinstall dependencies in the new environment
+
+## Next Steps
+
+Now that your system is prepared, you can proceed to:
+1. Download the Llama 3 model
+2. Install the text-generation-webui interface
+3. Configure and optimize the model for your system
+
+In the next guide, we'll cover downloading and installing the Llama 3 model and setting up the web interface.
+
+## Best Practices
+
+1. **Regular Updates**: Keep your NVIDIA drivers and CUDA toolkit updated
+2. **Resource Monitoring**: Use `nvidia-smi` to monitor GPU usage
+3. **Clean Environment**: Use virtual environments for different projects
+4. **Backup**: Back up your configuration files and model files
+
+By following this guide, you've created a solid foundation for running Llama 3 locally. Make sure all components are properly installed before proceeding to the model installation in the next guide.

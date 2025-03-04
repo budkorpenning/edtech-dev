@@ -1,0 +1,183 @@
+---
+title: 'Llama 3 Local Setup: Installation and Model Download'
+date: '2025-03-04'
+tags: ['ai', 'llama', 'local-ai', 'installation']
+draft: false
+summary: 'Step-by-step guide to downloading and installing Llama 3 and text-generation-webui'
+project: 'local-ai'
+order: 2
+---
+
+# Llama 3 Local Setup: Installation and Model Download
+
+This guide walks you through downloading the Llama 3.1 8B model and setting up the text-generation-webui interface. We'll ensure everything is properly installed and verified before running the model.
+
+## Installing text-generation-webui
+
+First, we'll set up the web interface that will help us interact with the model:
+
+```bash
+# Navigate to project directory
+cd ~/llama3_project/webui
+
+# Clone the repository
+git clone https://github.com/oobabooga/text-generation-webui.git
+
+# Enter the directory
+cd text-generation-webui
+
+# Install requirements
+pip install -r requirements.txt
+```
+
+## Downloading the Model
+
+We'll download the 4-bit quantized version of Llama 3.1 8B, which is optimized for 8GB VRAM GPUs:
+
+```bash
+# Navigate to models directory
+cd ~/llama3_project/webui/text-generation-webui/models
+
+# Clone the model repository
+git clone https://huggingface.co/unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit
+```
+
+## Verifying the Download
+
+After downloading, verify that all necessary files are present:
+
+```bash
+# List files and check sizes
+ls -lh Meta-Llama-3.1-8B-Instruct-bnb-4bit
+```
+
+You should see:
+- Model files (`.safetensors`)
+- Tokenizer files
+- Configuration files
+
+The total size should be several gigabytes. If files are missing or seem too small, try re-downloading.
+
+## Setting Up the Web Interface
+
+The text-generation-webui interface requires specific configuration:
+
+1. Create a configuration file:
+```bash
+cd ~/llama3_project/webui/text-generation-webui
+cp settings-template.yaml settings.yaml
+```
+
+2. Edit settings.yaml (optional but recommended):
+```yaml
+server:
+  listen_port: 7860
+  listen_host: 127.0.0.1
+  
+model:
+  loader: transformers
+  max_memory: 7000
+  gpu_memory_utilization: 0.95
+```
+
+## Directory Structure
+
+After installation, your directory structure should look like this:
+
+```
+llama3_project/
+├── venv/
+├── models/
+└── webui/
+    └── text-generation-webui/
+        ├── models/
+        │   └── Meta-Llama-3.1-8B-Instruct-bnb-4bit/
+        ├── settings.yaml
+        └── server.py
+```
+
+## Verifying the Installation
+
+Let's verify everything is properly installed:
+
+1. Activate the virtual environment:
+```bash
+source ~/llama3_project/venv/bin/activate
+```
+
+2. Test the web interface:
+```bash
+cd ~/llama3_project/webui/text-generation-webui
+python server.py --test
+```
+
+You should see output indicating successful initialization and no errors.
+
+## Troubleshooting Installation Issues
+
+### Model Download Issues
+If you encounter problems downloading the model:
+1. Check your internet connection
+2. Verify you have sufficient disk space
+3. Try using `git lfs pull` if files appear empty
+
+### Web UI Installation Issues
+Common problems and solutions:
+1. **Missing dependencies**: Run `pip install -r requirements.txt` again
+2. **Port conflicts**: Change the port in settings.yaml
+3. **Permission issues**: Check directory permissions
+
+### Model File Verification
+If unsure about model integrity:
+1. Check file sizes match the repository
+2. Verify SHA256 checksums if provided
+3. Try re-downloading specific files
+
+## Security Considerations
+
+When running a local AI model, consider these security practices:
+
+1. **Network Access**: By default, the interface only accepts local connections
+2. **File Permissions**: Ensure model files are properly protected
+3. **Updates**: Keep the web UI and dependencies updated
+
+## Resource Management
+
+Before running the model, set up resource monitoring:
+
+1. Install monitoring tools:
+```bash
+sudo apt install htop nvtop
+```
+
+2. Monitor system resources:
+```bash
+# GPU monitoring
+watch -n 1 nvidia-smi
+
+# System monitoring
+htop
+```
+
+## Next Steps
+
+After completing this installation:
+1. Verify all components are properly installed
+2. Ensure model files are complete
+3. Check system resources are adequate
+4. Proceed to the next guide for running and optimizing the model
+
+In the next guide, we'll cover:
+- Loading the model
+- Optimizing parameters
+- Performance benchmarking
+- Best practices for usage
+
+## Best Practices
+
+1. **Regular Backups**: Keep backups of your configuration files
+2. **Version Control**: Note the versions of installed components
+3. **Resource Monitoring**: Regular checks of system resources
+4. **Documentation**: Keep notes of any customizations made
+
+By following this guide, you've successfully installed Llama 3 and its web interface. Ensure everything is properly verified before proceeding to run the model.
