@@ -32,7 +32,7 @@ interface LayoutProps {
 }
 
 // Project navigation component
-const ProjectNavigation = ({ content }) => {
+const ProjectNavigation = ({ content, label }) => {
   const { project } = content
 
   if (!project) return null
@@ -176,7 +176,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
           <div className="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700">
             <div className="divide-y divide-gray-200 pb-0 dark:divide-gray-700">
               {/* Project navigation component */}
-              <ProjectNavigation content={content} />
+              <ProjectNavigation content={content} label="Current Article" />
 
               <div>
                 <div className="mb-2 text-base leading-6 font-medium text-gray-500 dark:text-gray-400">
@@ -187,21 +187,57 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 <div className="prose dark:prose-invert max-w-none pt-10 pb-8">{children}</div>
               </div>
 
-              <div className="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
-                <Link href={discussUrl(path)} rel="nofollow">
-                  Discuss on Twitter
-                </Link>
-                {` • `}
-                <Link href={editUrl(filePath)}>View on GitHub</Link>
+              <div className="hidden">
+                <div className="pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300">
+                  <Link href={discussUrl(path)} rel="nofollow">
+                    Discuss on Twitter
+                  </Link>
+                  {` • `}
+                  <Link href={editUrl(filePath)}>View on GitHub</Link>
+                </div>
+                {siteMetadata.comments && (
+                  <div
+                    className="pt-6 pb-6 text-center text-gray-700 dark:text-gray-300"
+                    id="comment"
+                  >
+                    <Comments slug={slug} />
+                  </div>
+                )}
               </div>
-              {siteMetadata.comments && (
-                <div
-                  className="pt-6 pb-6 text-center text-gray-700 dark:text-gray-300"
-                  id="comment"
-                >
-                  <Comments slug={slug} />
+
+              {(next || prev) && (
+                <div className="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
+                  {prev && prev.path && (
+                    <div>
+                      <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                        Previous Article
+                      </h2>
+                      <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                        <Link href={`/${prev.path}`}>{prev.title}</Link>
+                      </div>
+                    </div>
+                  )}
+                  {next && next.path && (
+                    <div>
+                      <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
+                        Next Article
+                      </h2>
+                      <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                        <Link href={`/${next.path}`}>{next.title}</Link>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
+              <div className="pt-4 xl:pt-8">
+                <Link
+                  href={`/${basePath}`}
+                  className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                  aria-label="Back to the guides"
+                >
+                  &larr; Back to the guides
+                </Link>
+              </div>
             </div>
             <footer>
               <div className="divide-y divide-gray-200 text-sm leading-5 font-medium dark:divide-gray-700">
@@ -217,39 +253,6 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                     </div>
                   </div>
                 )}
-                {(next || prev) && (
-                  <div className="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
-                    {prev && prev.path && (
-                      <div>
-                        <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                          Previous Article
-                        </h2>
-                        <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                          <Link href={`/${prev.path}`}>{prev.title}</Link>
-                        </div>
-                      </div>
-                    )}
-                    {next && next.path && (
-                      <div>
-                        <h2 className="text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                          Next Article
-                        </h2>
-                        <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                          <Link href={`/${next.path}`}>{next.title}</Link>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              <div className="pt-4 xl:pt-8">
-                <Link
-                  href={`/${basePath}`}
-                  className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                  aria-label="Back to the guides"
-                >
-                  &larr; Back to the guides
-                </Link>
               </div>
             </footer>
           </div>
