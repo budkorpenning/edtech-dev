@@ -87,8 +87,8 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
     return notFound()
   }
 
-  const prev = sortedCoreContents[postIndex + 1]
-  const next = sortedCoreContents[postIndex - 1]
+  const prev = sortedCoreContents[postIndex - 1]
+  const next = sortedCoreContents[postIndex + 1]
   const post = allGuides.find((p) => p.slug === slug) as Guides
   const authorList = post?.authors || ['default']
   const authorDetails = authorList.map((author) => {
