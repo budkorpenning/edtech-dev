@@ -243,7 +243,6 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
 
         {/* Project navigation component at the bottom */}
         {content.project && <ProjectNavigation content={content} label="Current Article" />}
-        
         {/* Footer */}
         <div className="mt-8">
           <div className="text-sm leading-5 font-medium">
