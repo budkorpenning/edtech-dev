@@ -19,7 +19,14 @@ export default function Footer() {
           <Link href="/">{siteMetadata.title}</Link>
         </div>
         <div className="mb-8 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-          <a href="#" onClick={() => window.UC_UI?.showSecondLayer?.()}>
+          <a
+            href="#"
+            onClick={() => {
+              ;(window as typeof window & {
+                UC_UI?: { showSecondLayer: () => void }
+              }).UC_UI?.showSecondLayer?.()
+            }}
+          >
             Privacy settings
           </a>
         </div>
