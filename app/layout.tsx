@@ -11,6 +11,7 @@ import Footer from '@/components/Footer'
 import siteMetadata from '@/data/siteMetadata'
 import { ThemeProviders } from './theme-providers'
 import { Metadata } from 'next'
+import Script from 'next/script'
 import Head from 'next/head'
 
 const space_grotesk = Space_Grotesk({
@@ -69,15 +70,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <Head>
-        {/* ✅ Usercentrics CMP for GDPR Compliance */}
-        <script src="https://web.cmp.usercentrics.eu/modules/autoblocker.js"></script>
-        <script
-          id="usercentrics-cmp"
-          src="https://web.cmp.usercentrics.eu/ui/loader.js"
-          data-settings-id="9I8rjDUd0klInd" // 👈 Replace with your actual settings ID
-          async
-        ></script>
-
         {/* Favicons and metadata */}
         <link
           rel="apple-touch-icon"
@@ -107,6 +99,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000" />
         <link rel="alternate" type="application/rss+xml" href={`${basePath}/feed.xml`} />
       </Head>
+
+      {/* ✅ Usercentrics CMP scripts loaded early via next/script */}
+      <Script
+        src="https://web.cmp.usercentrics.eu/modules/autoblocker.js"
+        strategy="beforeInteractive"
+      />
+      <Script
+        id="usercentrics-cmp"
+        src="https://web.cmp.usercentrics.eu/ui/loader.js"
+        data-settings-id="9I8rjDUd0klInd"
+        strategy="beforeInteractive"
+      />
 
       <body className="bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white">
         <ThemeProviders>
