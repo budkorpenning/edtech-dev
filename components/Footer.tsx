@@ -28,7 +28,9 @@ export default function Footer() {
               const usercentrics = (window as typeof window & {
                 UC_UI?: { showSecondLayer: () => void }
               }).UC_UI
-              usercentrics?.showSecondLayer?.()
+              if (usercentrics?.showSecondLayer) {
+                usercentrics.showSecondLayer()
+              }
             }}
           >
             Privacy settings
