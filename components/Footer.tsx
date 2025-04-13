@@ -1,8 +1,7 @@
-'use client'
-
 import Link from './Link'
 import siteMetadata from '@/data/siteMetadata'
 import SocialIcon from '@/components/social-icons'
+import PrivacyButton from './PrivacyButton'
 
 export default function Footer() {
   return (
@@ -21,13 +20,7 @@ export default function Footer() {
           <Link href="/">{siteMetadata.title}</Link>
         </div>
         <div className="mb-8 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-          <button
-            type="button"
-            onClick={() => window.UC_UI?.showSecondLayer?.()}
-            className="underline"
-          >
-            Privacy settings
-          </button>
+          <PrivacyButton />
         </div>
       </div>
     </footer>
