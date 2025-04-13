@@ -11,6 +11,7 @@ export default function Footer() {
           <SocialIcon kind="github" href={siteMetadata.github} size={6} />
           <SocialIcon kind="linkedin" href={siteMetadata.linkedin} size={6} />
         </div>
+
         <div className="mb-1 flex flex-wrap justify-center gap-x-2 text-sm text-gray-500 dark:text-gray-400">
           <span>{siteMetadata.author}</span>
           <span>•</span>
@@ -18,14 +19,16 @@ export default function Footer() {
           <span>•</span>
           <Link href="/">{siteMetadata.title}</Link>
         </div>
+
         <div className="mb-8 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
           <button
             type="button"
             className="underline hover:text-black dark:hover:text-white"
             onClick={() => {
-              ;(window as typeof window & {
+              const usercentrics = (window as typeof window & {
                 UC_UI?: { showSecondLayer: () => void }
-              }).UC_UI?.showSecondLayer?.()
+              }).UC_UI
+              usercentrics?.showSecondLayer?.()
             }}
           >
             Privacy settings
